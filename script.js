@@ -44,17 +44,40 @@ const empty = document.querySelector('.empty');
 
 let active = 'all';
 
+
+/* =========================================
+   GOOGLE ANALYTICS HELPER
+========================================= */
+
+function trackEvent(eventName, parameters = {}) {
+  if (typeof gtag === 'function') {
+    gtag('event', eventName, parameters);
+  }
+}
+
+
+/* =========================================
+   BLUEPRINT CARD
+========================================= */
+
 function card(b) {
   return `
     <article class="bp-card" data-id="${b.id}">
-      <button class="bp-art ${b.art}" aria-label="View ${b.name} blueprint details">
+
+      <button
+        class="bp-art ${b.art}"
+        aria-label="View ${b.name} blueprint details"
+      >
         <span>PF-${b.id.toUpperCase()}</span>
         <i class="figure-shape"></i>
       </button>
 
       <div class="card-content">
+
         <span class="category">${b.category}</span>
+
         <h3>${b.name}</h3>
+
         <p>${b.desc}</p>
 
         <div class="meta">
@@ -62,18 +85,29 @@ function card(b) {
           <span>${b.time}</span>
         </div>
 
-        <button class="button ghost download" data-download="${b.id}">
+        <button
+          class="button ghost download"
+          data-download="${b.id}"
+        >
           Download PDF ↓
         </button>
+
       </div>
+
     </article>
   `;
 }
+
+
+/* =========================================
+   RENDER BLUEPRINTS
+========================================= */
 
 function render() {
   const term = search.value.toLowerCase().trim();
 
   const shown = blueprints.filter(b => {
+
     const filter =
       active === 'all' ||
       b.category.toLowerCase() === active ||
@@ -87,32 +121,83 @@ function render() {
   });
 
   grid.innerHTML = shown.map(card).join('');
+
   empty.hidden = shown.length > 0;
 }
 
 render();
 
-search.addEventListener('input', render);
+
+/* =========================================
+   SEARCH TRACKING
+========================================= */
+
+let searchTimer;
+
+search.addEventListener('input', () => {
+
+  render();
+
+  clearTimeout(searchTimer);
+
+  searchTimer = setTimeout(() => {
+
+    const term = search.value.trim();
+
+    if (term) {
+      trackEvent('blueprint_search', {
+        search_term: term
+      });
+    }
+
+  }, 800);
+});
+
+
+/* =========================================
+   CATEGORY FILTERS
+========================================= */
 
 document.querySelectorAll('.filter').forEach(button => {
+
   button.addEventListener('click', () => {
-    document.querySelector('.filter.active').classList.remove('active');
+
+    const currentActive =
+      document.querySelector('.filter.active');
+
+    if (currentActive) {
+      currentActive.classList.remove('active');
+    }
 
     button.classList.add('active');
 
     active = button.dataset.filter;
 
     render();
+
+    trackEvent('blueprint_filter', {
+      filter_category: active
+    });
   });
+
 });
+
+
+/* =========================================
+   BLUEPRINT MODAL
+========================================= */
 
 const modal = document.querySelector('#detail-modal');
 const modalContent = document.querySelector('#modal-content');
 
+
 grid.addEventListener('click', event => {
-  const cardElement = event.target.closest('.bp-card');
+
+  const cardElement =
+    event.target.closest('.bp-card');
 
   if (!cardElement) return;
+
 
   const blueprint = blueprints.find(
     item => item.id === cardElement.dataset.id
@@ -120,19 +205,46 @@ grid.addEventListener('click', event => {
 
   if (!blueprint) return;
 
-  // Direct Download PDF button
+
+  /* -----------------------------------------
+     DIRECT DOWNLOAD
+  ----------------------------------------- */
+
   if (event.target.closest('[data-download]')) {
+
     if (blueprint.pdf) {
+
+      trackEvent('blueprint_download', {
+        blueprint_id: blueprint.id,
+        blueprint_name: blueprint.name,
+        file_name: blueprint.pdf
+      });
+
       window.open(blueprint.pdf, '_blank');
+
     } else {
-      toast('Blueprint coming soon. Check back shortly!');
+
+      toast(
+        'Blueprint coming soon. Check back shortly!'
+      );
     }
 
     return;
   }
 
-  // Open blueprint details modal
+
+  /* -----------------------------------------
+     OPEN BLUEPRINT DETAILS
+  ----------------------------------------- */
+
+  trackEvent('blueprint_view', {
+    blueprint_id: blueprint.id,
+    blueprint_name: blueprint.name
+  });
+
+
   modalContent.innerHTML = `
+
     <div class="modal-layout">
 
       <div class="bp-art ${blueprint.art}">
@@ -141,22 +253,32 @@ grid.addEventListener('click', event => {
       </div>
 
       <div>
-        <span class="category">${blueprint.category}</span>
+
+        <span class="category">
+          ${blueprint.category}
+        </span>
 
         <h2>${blueprint.name}</h2>
 
-        <p class="lede">${blueprint.desc}</p>
+        <p class="lede">
+          ${blueprint.desc}
+        </p>
 
         <div class="meta">
           <span>${blueprint.difficulty}</span>
           <span>${blueprint.time}</span>
         </div>
 
+
         <div class="button-row">
 
-          <button class="button primary" data-modal-download>
+          <button
+            class="button primary"
+            data-modal-download
+          >
             Download PDF
           </button>
+
 
           <button
             class="button ghost"
@@ -165,31 +287,48 @@ grid.addEventListener('click', event => {
             View Instructions
           </button>
 
-          <button class="button ghost" data-share>
+
+          <button
+            class="button ghost"
+            data-share
+          >
             Share
           </button>
 
         </div>
 
-        <h3>What you'll need</h3>
+
+        <h3>
+          What you'll need
+        </h3>
+
 
         <div class="need-list">
+
           <span>• A4 paper</span>
           <span>• Printer</span>
           <span>• Scissors</span>
           <span>• Glue</span>
           <span>• Ruler</span>
           <span>• Optional coloring tools</span>
+
         </div>
 
-        <h3>Build Preview</h3>
+
+        <h3>
+          Build Preview
+        </h3>
+
 
         <div class="build-preview">
+
           <span>1. PRINT</span>
           <span>2. CUT</span>
           <span>3. FOLD</span>
           <span>4. BUILD</span>
+
         </div>
+
 
         <p class="safety">
           Always follow safe crafting practices when using scissors or other tools.
@@ -200,51 +339,115 @@ grid.addEventListener('click', event => {
     </div>
   `;
 
+
   modal.showModal();
 
-  // Modal Download PDF button
+
+  /* -----------------------------------------
+     MODAL DOWNLOAD
+  ----------------------------------------- */
+
   const modalDownload =
     modalContent.querySelector('[data-modal-download]');
 
+
   modalDownload.addEventListener('click', () => {
+
     if (blueprint.pdf) {
+
+      trackEvent('blueprint_download', {
+        blueprint_id: blueprint.id,
+        blueprint_name: blueprint.name,
+        file_name: blueprint.pdf,
+        source: 'modal'
+      });
+
       window.open(blueprint.pdf, '_blank');
+
     } else {
-      toast('Blueprint coming soon. Check back shortly!');
+
+      toast(
+        'Blueprint coming soon. Check back shortly!'
+      );
+
     }
+
   });
+
 });
+
+
+/* =========================================
+   CLOSE MODAL
+========================================= */
 
 document.querySelector('.modal-close').onclick = () => {
   modal.close();
 };
 
+
 modal.addEventListener('click', event => {
+
   if (event.target === modal) {
     modal.close();
   }
+
 });
+
+
+/* =========================================
+   MODAL BUTTONS
+========================================= */
 
 modalContent.addEventListener('click', event => {
 
-  // Share button
+
+  /* -----------------------------------------
+     SHARE BUTTON
+  ----------------------------------------- */
+
   if (event.target.matches('[data-share]')) {
+
     navigator.clipboard?.writeText(location.href);
 
-    toast('Link copied to clipboard!');
+    trackEvent('blueprint_share', {
+      page_url: location.href
+    });
+
+    toast(
+      'Link copied to clipboard!'
+    );
+
   }
 
-  // Toast buttons
+
+  /* -----------------------------------------
+     TOAST BUTTONS
+  ----------------------------------------- */
+
   if (event.target.dataset.toast) {
-    toast(event.target.dataset.toast);
+
+    toast(
+      event.target.dataset.toast
+    );
+
   }
+
 });
 
-const toastEl = document.querySelector('.toast');
+
+/* =========================================
+   TOAST
+========================================= */
+
+const toastEl =
+  document.querySelector('.toast');
 
 let timer;
 
+
 function toast(message) {
+
   toastEl.textContent = message;
 
   toastEl.classList.add('show');
@@ -252,60 +455,133 @@ function toast(message) {
   clearTimeout(timer);
 
   timer = setTimeout(() => {
+
     toastEl.classList.remove('show');
+
   }, 3000);
+
 }
 
+
 document.querySelectorAll('[data-toast]').forEach(element => {
+
   element.onclick = () => {
+
     toast(element.dataset.toast);
+
   };
+
 });
 
-document.querySelector('#signup-form').addEventListener('submit', event => {
-  event.preventDefault();
 
-  event.currentTarget.querySelector('.form-message').textContent =
-    'You’re on the forge list — welcome aboard!';
+/* =========================================
+   EMAIL SIGNUP
+========================================= */
 
-  event.currentTarget.reset();
-});
+document
+  .querySelector('#signup-form')
+  .addEventListener('submit', event => {
 
-const nav = document.querySelector('nav');
-const toggle = document.querySelector('.menu-toggle');
+    event.preventDefault();
+
+
+    trackEvent('newsletter_signup', {
+      method: 'paperforge_form'
+    });
+
+
+    event.currentTarget
+      .querySelector('.form-message')
+      .textContent =
+      'You’re on the forge list — welcome aboard!';
+
+
+    event.currentTarget.reset();
+
+  });
+
+
+/* =========================================
+   MOBILE NAVIGATION
+========================================= */
+
+const nav =
+  document.querySelector('nav');
+
+const toggle =
+  document.querySelector('.menu-toggle');
+
 
 toggle.onclick = () => {
-  const open = nav.classList.toggle('open');
 
-  toggle.setAttribute('aria-expanded', open);
+  const open =
+    nav.classList.toggle('open');
+
+
+  toggle.setAttribute(
+    'aria-expanded',
+    open
+  );
+
 
   toggle.setAttribute(
     'aria-label',
-    open ? 'Close navigation' : 'Open navigation'
+    open
+      ? 'Close navigation'
+      : 'Open navigation'
   );
+
 };
 
+
 nav.querySelectorAll('a').forEach(link => {
+
   link.onclick = () => {
+
     nav.classList.remove('open');
+
   };
+
 });
 
-const observer = new IntersectionObserver(
-  items => {
-    items.forEach(item => {
-      if (item.isIntersecting) {
-        item.target.classList.add('visible');
 
-        observer.unobserve(item.target);
-      }
-    });
-  },
-  {
-    threshold: 0.1
-  }
-);
+/* =========================================
+   SCROLL REVEAL
+========================================= */
 
-document.querySelectorAll('.reveal').forEach(element => {
-  observer.observe(element);
-});
+const observer =
+  new IntersectionObserver(
+    items => {
+
+      items.forEach(item => {
+
+        if (item.isIntersecting) {
+
+          item.target.classList.add(
+            'visible'
+          );
+
+          observer.unobserve(
+            item.target
+          );
+
+        }
+
+      });
+
+    },
+    {
+      threshold: 0.1
+    }
+  );
+
+
+document
+  .querySelectorAll('.reveal')
+  .forEach(element => {
+
+    observer.observe(element);
+
+  });
+
+
