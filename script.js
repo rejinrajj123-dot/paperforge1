@@ -9,6 +9,18 @@ const blueprints = [
     art: 'bolt',
     pdf: 'luffy.pdf'
   },
+
+  {
+    id: 'golem',
+    name: 'Golem',
+    category: 'Minecraft Character',
+    desc: 'A printable Minecraft Golem paper character blueprint.',
+    difficulty: 'Intermediate',
+    time: '45–60 min',
+    art: 'golem',
+    pdf: 'golem.pdf'
+  },
+
   {
     id: 'nova',
     name: 'Nova',
@@ -18,6 +30,7 @@ const blueprints = [
     time: '45–60 min',
     art: 'nova'
   },
+
   {
     id: 'ember',
     name: 'Ember',
@@ -27,6 +40,7 @@ const blueprints = [
     time: '45–60 min',
     art: 'ember'
   },
+
   {
     id: 'atlas-mk2',
     name: 'Atlas-MK2',
