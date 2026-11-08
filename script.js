@@ -564,3 +564,56 @@ document
   });
 
 
+
+
+/* =========================================
+   SCROLL-REACTIVE BACKGROUND
+   The ambient palette changes as each section
+   becomes the main focus of the viewport.
+========================================= */
+(() => {
+  const scenes = [
+    ['#e9ddff','#d9f6ff','#fff0f4'], // Hero: lavender / sky
+    ['#d9f5ff','#e8e0ff','#e8fff5'], // Blueprint gallery
+    ['#dffaf1','#d8f5ff','#f0e8ff'], // Frame Lab
+    ['#d9f7ee','#dcecff','#f5f5ff'], // How it works
+    ['#eee2ff','#dff5ff','#fff0e5'], // Featured
+    ['#dff7e9','#fff0df','#e5edff'], // Community
+    ['#e7e2ff','#ffe5ed','#e0f8ff'], // Social
+    ['#fff0df','#ffe5ed','#e9e2ff'], // Signup
+    ['#f2eaff','#e4f7ff','#fff3df']  // Premium / footer
+  ];
+  const sections = [...document.querySelectorAll('main > section')];
+  if (!sections.length) return;
+
+  let active = -1;
+  let ticking = false;
+  const setScene = () => {
+    ticking = false;
+    const marker = window.innerHeight * 0.46;
+    let next = 0;
+    sections.forEach((section, index) => {
+      if (section.getBoundingClientRect().top <= marker) next = index;
+    });
+    if (next !== active) {
+      active = next;
+      const palette = scenes[Math.min(next, scenes.length - 1)];
+      document.body.style.setProperty('--scene-a', palette[0]);
+      document.body.style.setProperty('--scene-b', palette[1]);
+      document.body.style.setProperty('--scene-c', palette[2]);
+      document.body.dataset.scrollScene = String(next);
+    }
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+    document.body.style.setProperty('--scroll-shift', (progress * 100).toFixed(1) + '%');
+  };
+  const requestUpdate = () => {
+    if (!ticking) {
+      ticking = true;
+      window.requestAnimationFrame(setScene);
+    }
+  };
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+  window.addEventListener('resize', requestUpdate);
+  setScene();
+})();
