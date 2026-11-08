@@ -1,6 +1,6 @@
 const blueprints = [
   // Fan creations — existing PDF files are preserved.
-  { id: "luffy", name: "Luffy", category: "Hero", collection: "fan", desc: "A printable paper character blueprint.", difficulty: "Intermediate", time: "45–60 min", art: "bolt", pdf: "luffy.pdf" },
+  { id: "luffy", name: "Luffy", category: "Hero", collection: "fan", desc: "A printable paper character blueprint.", difficulty: "Intermediate", time: "45–60 min", art: "luffy", pdf: "luffy.pdf" },
   { id: "golem", name: "Golem", category: "Minecraft Character", collection: "fan", desc: "A printable Minecraft Golem paper character blueprint.", difficulty: "Intermediate", time: "45–60 min", art: "golem", pdf: "golem.pdf" },
 
   // PaperForge Genesis Series — original characters.
