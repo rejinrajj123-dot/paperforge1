@@ -153,3 +153,18 @@ footer .brand{color:#292440}
 /* Penova brand mark in the PaperForge header */
 .brand-mark { overflow: hidden; }
 .brand-mark img { width: 27px; height: 27px; object-fit: contain; display: block; }
+
+/* Penova logo sizing and alignment */
+.brand-mark{
+  overflow:hidden;
+  padding:4px;
+  background:linear-gradient(135deg,#f4efff,#e7f6ff);
+  border:1px solid #cfc2ff;
+  border-radius:12px;
+}
+.brand-mark img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
