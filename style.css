@@ -168,3 +168,23 @@ footer .brand{color:#292440}
   height:100%;
   object-fit:contain;
 }
+
+
+/* Blueprint card polish: make the artwork fill its card on every screen */
+.bp-card > .bp-art{
+  display:grid;
+  width:100%;
+  min-height:194px;
+  padding:0;
+  border:0;
+  cursor:pointer;
+}
+.bp-card > .bp-art:focus-visible{
+  outline:3px solid #7652df;
+  outline-offset:3px;
+}
+@media(max-width:520px){
+  .bp-card > .bp-art{
+    min-height:220px;
+  }
+}
