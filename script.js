@@ -384,17 +384,77 @@ modalContent.addEventListener('click', event => {
      SHARE BUTTON
   ----------------------------------------- */
 
-  if (event.target.matches('[data-share]')) {
+  if (event.target.closest('[data-share]')) {
 
-    navigator.clipboard?.writeText(location.href);
+    const shareUrl = blueprint.pdf
+      ? new URL(blueprint.pdf, location.href).href
+      : location.href;
+
+    const shareTitle = `PaperForge - ${blueprint.name}`;
+    const shareText = `Check out this ${blueprint.name} paper figure from PaperForge!`;
 
     trackEvent('blueprint_share', {
-      page_url: location.href
+      blueprint_id: blueprint.id,
+      blueprint_name: blueprint.name,
+      page_url: shareUrl
     });
 
-    toast(
-      'Link copied to clipboard!'
-    );
+    (async () => {
+      try {
+        // Share the actual PDF file when the browser supports file sharing.
+        if (blueprint.pdf && navigator.share) {
+          const response = await fetch(shareUrl);
+          if (!response.ok) throw new Error('PDF could not be loaded');
+
+          const pdfBlob = await response.blob();
+          const pdfFile = new File([pdfBlob], blueprint.pdf, {
+            type: 'application/pdf'
+          });
+
+          if (navigator.canShare?.({ files: [pdfFile] })) {
+            await navigator.share({
+              title: shareTitle,
+              text: shareText,
+              files: [pdfFile]
+            });
+            return;
+          }
+
+          // Some browsers share links but do not support file attachments.
+          await navigator.share({
+            title: shareTitle,
+            text: shareText,
+            url: shareUrl
+          });
+          return;
+        }
+
+        if (navigator.share) {
+          await navigator.share({
+            title: shareTitle,
+            text: shareText,
+            url: shareUrl
+          });
+          return;
+        }
+
+        // Desktop/older-browser fallback: copy the direct PDF link.
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(shareUrl);
+          toast('PDF link copied. Paste it into WhatsApp, Instagram or any app.');
+        } else {
+          toast('Open the PDF download and share it from your device.');
+        }
+      } catch (error) {
+        if (error.name === 'AbortError') return;
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          toast('PDF link copied. You can paste it into your favourite app.');
+        } catch {
+          toast('Sharing is unavailable in this browser. Please download the PDF first.');
+        }
+      }
+    })();
 
   }
 
