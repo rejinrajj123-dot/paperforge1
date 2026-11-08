@@ -245,3 +245,62 @@ body{
 @media(prefers-reduced-motion:reduce){
   body{transition:none!important;background-attachment:scroll}
 }
+
+
+/* =========================================
+   PAPERFORGE — LIVING SCROLL BACKGROUND
+   Soft luminous gradients follow the visitor
+   through the page without covering content.
+========================================= */
+html { background: #f7f6ff; }
+body {
+  isolation: isolate;
+  position: relative;
+  background: transparent !important;
+  --scene-a: #d9c8ff;
+  --scene-b: #bfeeff;
+  --scene-c: #ffe0ed;
+  --parallax-y: 0px;
+}
+body::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  inset: -18%;
+  background:
+    radial-gradient(ellipse at 12% 20%, color-mix(in srgb, var(--scene-a) 92%, white 8%) 0%, transparent 38%),
+    radial-gradient(ellipse at 88% 28%, color-mix(in srgb, var(--scene-b) 90%, white 10%) 0%, transparent 40%),
+    radial-gradient(ellipse at 52% 88%, color-mix(in srgb, var(--scene-c) 88%, white 12%) 0%, transparent 42%),
+    radial-gradient(ellipse at 50% 50%, #ffffff 0%, #f8f7ff 68%);
+  background-size: 115% 115%, 125% 125%, 120% 120%, 100% 100%;
+  background-position: 0% 0%, 100% 10%, 50% 100%, center;
+  filter: blur(18px) saturate(1.08);
+  opacity: .96;
+  transform: translate3d(0, var(--parallax-y), 0) scale(1.04);
+  transition: background 1.25s ease, opacity .8s ease;
+  will-change: transform, background;
+}
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  inset: 0;
+  opacity: .22;
+  background-image:
+    radial-gradient(circle at 18% 34%, #ffffff 0 1px, transparent 2px),
+    radial-gradient(circle at 78% 68%, #ffffff 0 1px, transparent 2px);
+  background-size: 34px 34px, 47px 47px;
+  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+}
+@media (max-width: 800px) {
+  body::before {
+    inset: -10%;
+    filter: blur(24px) saturate(1.05);
+    transform: translate3d(0, calc(var(--parallax-y) * .55), 0) scale(1.08);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::before { transition: none; transform: none; }
+}
