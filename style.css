@@ -17,3 +17,134 @@
 .bp-art.orbit{--fc1:#c3d7ff;--fc2:#5c76c9;background-color:#202b49}
 .bp-art.golem{--fc1:#b9c7a3;--fc2:#647b62;background-color:#28352c}
 .bp-card .category{display:inline-block;max-width:100%;line-height:1.5}
+
+
+/* =========================================
+   PAPERFORGE LIGHT + VIBRANT THEME
+   Soft lavender canvas, bright accents, crisp contrast
+========================================= */
+:root{
+  color-scheme:light;
+  --bg:#f7f6ff;
+  --panel:#ffffff;
+  --ink:#25213b;
+  --muted:#706b86;
+  --line:rgba(69,54,116,.14);
+  --purple:#8054f6;
+  --cyan:#16bfe0;
+  --lime:#c9f36a;
+}
+html,body{background-color:#f7f6ff;color:#25213b}
+body{
+  background-image:
+    radial-gradient(circle at 8% 8%,#e9ddff 0,transparent 28rem),
+    radial-gradient(circle at 92% 18%,#d9f8ff 0,transparent 25rem),
+    linear-gradient(#ffffff00 97%,#7560a00a 97%);
+  background-size:auto,auto,100% 4px;
+}
+.site-header{
+  background:rgba(255,255,255,.88);
+  border-bottom:1px solid #ded8f0;
+  box-shadow:0 5px 24px #55418a0b;
+}
+.brand{color:#292341}
+.brand>span:last-child>span{color:#8054f6}
+.brand-mark{
+  color:#7046e8;border-color:#cfc2ff;
+  background:linear-gradient(135deg,#eee7ff,#dffaff);
+  box-shadow:inset 0 0 15px #9d62ff20;
+}
+.site-header nav{color:#625b78}
+.site-header nav>a:not(.nav-cta):hover{color:#8054f6}
+.nav-cta{
+  color:#7046e8;background:#eee8ff;border-color:#cbbaff;
+}
+.eyebrow{color:#7655cf}
+.eyebrow span{background:#16bfe0}
+h1,h2,h3{color:#292440}
+em{
+  background:linear-gradient(105deg,#8154f6,#12bcd9 55%,#ff8b9d);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.lede,.section-heading>p:not(.eyebrow){color:#706b86}
+.button{
+  color:#342d50;border-color:#ddd7ed;background:#fff;
+}
+.button:hover{
+  border-color:#a68cff;box-shadow:0 9px 24px #8054f620;
+}
+.primary{
+  color:#fff;background:linear-gradient(105deg,#7950ef,#a36df8);
+  border-color:#8e68f3;box-shadow:0 9px 25px #8054f62b;
+}
+.primary:hover{color:#fff;box-shadow:0 13px 30px #8054f640}
+.ghost{background:#fff}
+.stats strong{color:#30294a}
+.stats span{color:#77718b}
+.art-chip{
+  color:#53466f;background:#ffffffed;border-color:#ddd5ef;
+  box-shadow:0 8px 25px #46356d18;
+}
+.chip-one{color:#087f9b}
+.chip-two{color:#668b13}
+.search{background:#fff;border-color:#ded8ed;color:#77718b}
+.search input{color:#292440}
+.search input::placeholder{color:#9a94aa}
+.filter{background:#fff;border-color:#e1dced;color:#6b6480}
+.filter:hover,.filter.active{
+  color:#342b50;background:#dff7ff;border-color:#8edff0;
+}
+.bp-card{
+  background:linear-gradient(145deg,#fff,#f4f0ff);
+  border-color:#e4def2;box-shadow:0 8px 24px #5140780b;
+}
+.bp-card:hover{
+  border-color:#b7a0ff;box-shadow:0 20px 38px #51407819;
+}
+.bp-art{box-shadow:inset 0 0 0 1px #ffffff70}
+.bp-art:before{border-color:#ffffff88}
+.bp-art span{color:#fff;text-shadow:0 1px 4px #20203b88}
+.category{color:#168ca8}
+.meta span{
+  color:#625b78;background:#eeeaf7;border-color:#e1dced;
+}
+.empty{color:#706b86}
+.frame-lab-shell,.featured-panel,.social-box,.signup-box,.pack,.step,.build-card{
+  border-color:#e2dcef;
+}
+.featured-panel,.social-box,.signup-box,.pack,.step{
+  background:linear-gradient(145deg,#fff,#f4f0ff);
+  color:#30294a;box-shadow:0 12px 34px #5140780d;
+}
+.featured-panel p,.social-box p,.signup-box p,.pack p,.step p{color:#706b86}
+.collection-tags span{background:#eee9ff;color:#5d48a5}
+input,textarea,select{color:#292440}
+#signup-form input{
+  background:#fff;border:1px solid #ded8ed;color:#292440;
+}
+#signup-form input::placeholder{color:#9992aa}
+.pack strong{color:#7950ef}
+footer{
+  background:#eeebfa;color:#5e5872;border-top:1px solid #ded8ef;
+}
+footer .brand{color:#292440}
+.footer-links a:hover{color:#8054f6}
+.copyright{color:#89839a}
+#detail-modal{
+  color:#292440;background:#fff;border:1px solid #e1dced;
+  box-shadow:0 25px 80px #30204b30;
+}
+#detail-modal::backdrop{background:#30274766;backdrop-filter:blur(5px)}
+#detail-modal h2,#detail-modal h3{color:#292440}
+#detail-modal .lede{color:#706b86}
+.modal-close{
+  color:#554b70;background:#f1edfa;border-color:#ded8ed;
+}
+.need-list span,.build-preview span{color:#625b78;background:#f2effa}
+.toast{box-shadow:0 8px 25px #30204b25}
+@media(max-width:760px){
+  .site-header nav{
+    background:#fff;border:1px solid #e1dced;
+    box-shadow:0 15px 35px #5140781a;
+  }
+}
