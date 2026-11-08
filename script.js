@@ -227,7 +227,6 @@ grid.addEventListener('click', event => {
     <div class="modal-layout">
 
       <div class="bp-art ${blueprint.art}">
-        <span>PF-${blueprint.id.toUpperCase()}</span>
         <i class="figure-shape"></i>
       </div>
 
