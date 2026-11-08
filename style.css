@@ -148,3 +148,8 @@ footer .brand{color:#292440}
     box-shadow:0 15px 35px #5140781a;
   }
 }
+
+
+/* Penova brand mark in the PaperForge header */
+.brand-mark { overflow: hidden; }
+.brand-mark img { width: 27px; height: 27px; object-fit: contain; display: block; }
