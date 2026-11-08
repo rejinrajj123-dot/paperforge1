@@ -304,3 +304,33 @@ body::after {
 @media (prefers-reduced-motion: reduce) {
   body::before { transition: none; transform: none; }
 }
+
+
+/* PAPERFORGE — illustrated papercraft landscape background */
+body::before {
+  background-image:
+    radial-gradient(ellipse at 12% 20%, color-mix(in srgb, var(--scene-a) 64%, white 36%) 0%, transparent 38%),
+    radial-gradient(ellipse at 88% 28%, color-mix(in srgb, var(--scene-b) 62%, white 38%) 0%, transparent 40%),
+    radial-gradient(ellipse at 52% 88%, color-mix(in srgb, var(--scene-c) 60%, white 40%) 0%, transparent 42%),
+    url("images/paperforge-world.svg");
+  background-size: 115% 115%, 125% 125%, 120% 120%, cover;
+  background-position:
+    0% 0%,
+    100% 10%,
+    50% 100%,
+    center calc(50% + var(--parallax-y));
+  background-repeat: no-repeat;
+  opacity: .78;
+  filter: saturate(1.08);
+}
+@media (max-width: 800px) {
+  body::before {
+    background-size: 145% 145%, 150% 150%, 145% 145%, auto 115%;
+    background-position:
+      0% 0%,
+      100% 10%,
+      50% 100%,
+      center calc(50% + var(--parallax-y));
+    opacity: .72;
+  }
+}
