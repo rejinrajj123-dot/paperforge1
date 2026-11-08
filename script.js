@@ -567,53 +567,63 @@ document
 
 
 /* =========================================
-   SCROLL-REACTIVE BACKGROUND
-   The ambient palette changes as each section
-   becomes the main focus of the viewport.
+   PAPERFORGE — CONTINUOUS SCROLL ATMOSPHERE
+   Colours blend between sections, with gentle
+   parallax movement for a living background.
 ========================================= */
 (() => {
   const scenes = [
-    ['#e9ddff','#d9f6ff','#fff0f4'], // Hero: lavender / sky
-    ['#d9f5ff','#e8e0ff','#e8fff5'], // Blueprint gallery
-    ['#dffaf1','#d8f5ff','#f0e8ff'], // Frame Lab
-    ['#d9f7ee','#dcecff','#f5f5ff'], // How it works
-    ['#eee2ff','#dff5ff','#fff0e5'], // Featured
-    ['#dff7e9','#fff0df','#e5edff'], // Community
-    ['#e7e2ff','#ffe5ed','#e0f8ff'], // Social
-    ['#fff0df','#ffe5ed','#e9e2ff'], // Signup
-    ['#f2eaff','#e4f7ff','#fff3df']  // Premium / footer
+    ['#d9c8ff','#bfeeff','#ffe0ed'], // Hero
+    ['#bceeff','#d9d0ff','#d8fff0'], // Blueprints
+    ['#baf5e8','#c8efff','#e6dcff'], // Frame Lab
+    ['#c7f2df','#c8e6ff','#f0e9ff'], // How it works
+    ['#dfd0ff','#c9f3ff','#ffe4d2'], // Featured
+    ['#c9f3dc','#ffe0c8','#d9e6ff'], // Community
+    ['#d8d0ff','#ffd8e8','#c9f5ff'], // Social
+    ['#ffe3c8','#ffd5e5','#e4d9ff'], // Signup
+    ['#dfd4ff','#c9edff','#ffe8cf']  // Premium
   ];
   const sections = [...document.querySelectorAll('main > section')];
   if (!sections.length) return;
 
-  let active = -1;
-  let ticking = false;
-  const setScene = () => {
-    ticking = false;
-    const marker = window.innerHeight * 0.46;
-    let next = 0;
-    sections.forEach((section, index) => {
-      if (section.getBoundingClientRect().top <= marker) next = index;
+  const hexToRgb = hex => {
+    const value = hex.replace('#','');
+    return [0,2,4].map(i => parseInt(value.slice(i,i+2),16));
+  };
+  const mix = (a,b,t) => {
+    const x=hexToRgb(a), y=hexToRgb(b);
+    return '#'+x.map((v,i)=>Math.round(v+(y[i]-v)*t).toString(16).padStart(2,'0')).join('');
+  };
+
+  let ticking=false;
+  const update = () => {
+    ticking=false;
+    const marker=window.innerHeight*0.48;
+    let index=0;
+    for(let i=0;i<sections.length;i++){
+      if(sections[i].getBoundingClientRect().top<=marker) index=i;
+      else break;
+    }
+    const current=sections[index];
+    const next=sections[Math.min(index+1,sections.length-1)];
+    const start=current.getBoundingClientRect().top;
+    const distance=Math.max(1,next.getBoundingClientRect().top-start || current.offsetHeight);
+    const blend=index===sections.length-1 ? 0 : Math.min(1,Math.max(0,(marker-start)/distance));
+    const a=scenes[Math.min(index,scenes.length-1)];
+    const b=scenes[Math.min(index+1,scenes.length-1)];
+    ['--scene-a','--scene-b','--scene-c'].forEach((name,i)=>{
+      document.body.style.setProperty(name,mix(a[i],b[i],blend));
     });
-    if (next !== active) {
-      active = next;
-      const palette = scenes[Math.min(next, scenes.length - 1)];
-      document.body.style.setProperty('--scene-a', palette[0]);
-      document.body.style.setProperty('--scene-b', palette[1]);
-      document.body.style.setProperty('--scene-c', palette[2]);
-      document.body.dataset.scrollScene = String(next);
-    }
-    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
-    document.body.style.setProperty('--scroll-shift', (progress * 100).toFixed(1) + '%');
+    const maxScroll=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+    const progress=Math.min(1,Math.max(0,window.scrollY/maxScroll));
+    document.body.style.setProperty('--scroll-progress',(progress*100).toFixed(2)+'%');
+    document.body.style.setProperty('--parallax-y',(progress*90-45).toFixed(1)+'px');
+    document.body.dataset.scrollScene=String(index);
   };
-  const requestUpdate = () => {
-    if (!ticking) {
-      ticking = true;
-      window.requestAnimationFrame(setScene);
-    }
+  const requestUpdate=()=>{
+    if(!ticking){ticking=true;window.requestAnimationFrame(update);}
   };
-  window.addEventListener('scroll', requestUpdate, { passive: true });
-  window.addEventListener('resize', requestUpdate);
-  setScene();
-})();
+  window.addEventListener('scroll',requestUpdate,{passive:true});
+  window.addEventListener('resize',requestUpdate);
+  update();
+})();;
