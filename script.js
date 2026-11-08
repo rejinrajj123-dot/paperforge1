@@ -1,55 +1,19 @@
 const blueprints = [
-  {
-    id: 'luffy',
-    name: 'Luffy',
-    category: 'Hero',
-    desc: 'A printable paper character blueprint.',
-    difficulty: 'Intermediate',
-    time: '45–60 min',
-    art: 'bolt',
-    pdf: 'luffy.pdf'
-  },
+  // Fan creations — existing PDF files are preserved.
+  { id: "luffy", name: "Luffy", category: "Hero", collection: "fan", desc: "A printable paper character blueprint.", difficulty: "Intermediate", time: "45–60 min", art: "bolt", pdf: "luffy.pdf" },
+  { id: "golem", name: "Golem", category: "Minecraft Character", collection: "fan", desc: "A printable Minecraft Golem paper character blueprint.", difficulty: "Intermediate", time: "45–60 min", art: "golem", pdf: "golem.pdf" },
 
-  {
-    id: 'golem',
-    name: 'Golem',
-    category: 'Minecraft Character',
-    desc: 'A printable Minecraft Golem paper character blueprint.',
-    difficulty: 'Intermediate',
-    time: '45–60 min',
-    art: 'golem',
-    pdf: 'golem.pdf'
-  },
-
-  {
-    id: 'nova',
-    name: 'Nova',
-    category: 'Hero',
-    desc: 'A futuristic original hero designed specifically for paper construction.',
-    difficulty: 'Intermediate',
-    time: '45–60 min',
-    art: 'nova'
-  },
-
-  {
-    id: 'ember',
-    name: 'Ember',
-    category: 'Fantasy',
-    desc: 'A small fantasy guardian with a bold silhouette.',
-    difficulty: 'Intermediate',
-    time: '45–60 min',
-    art: 'ember'
-  },
-
-  {
-    id: 'atlas-mk2',
-    name: 'Atlas-MK2',
-    category: 'Robot',
-    desc: 'A larger mech-style paper figure for experienced builders.',
-    difficulty: 'Advanced',
-    time: '60–90 min',
-    art: 'atlas'
-  }
+  // PaperForge Genesis Series — original characters.
+  { id: "bolt-01", name: "Bolt-01", category: "Robot", collection: "original", desc: "A reliable little workshop companion.", difficulty: "Beginner", time: "30–45 min", art: "bolt" },
+  { id: "nova", name: "Nova", category: "Sci-Fi", collection: "original", desc: "A curious traveller from the edge of the stars.", difficulty: "Intermediate", time: "45–60 min", art: "nova" },
+  { id: "ember", name: "Ember", category: "Fantasy", collection: "original", desc: "A warm-hearted guardian with a spark of courage.", difficulty: "Intermediate", time: "45–60 min", art: "ember" },
+  { id: "atlas-mk2", name: "Atlas-MK2", category: "Robot", collection: "original", desc: "A sturdy defence mech built for big missions.", difficulty: "Advanced", time: "60–90 min", art: "atlas" },
+  { id: "mossback", name: "Mossback", category: "Fantasy", collection: "original", desc: "A gentle protector of ancient green places.", difficulty: "Intermediate", time: "45–60 min", art: "mossback" },
+  { id: "tidefin", name: "Tidefin", category: "Sci-Fi", collection: "original", desc: "A deep-ocean scout searching for lost wonders.", difficulty: "Intermediate", time: "45–60 min", art: "tidefin" },
+  { id: "prism", name: "Prism", category: "Fantasy", collection: "original", desc: "A crystal scholar who channels colour and light.", difficulty: "Advanced", time: "60–75 min", art: "prism" },
+  { id: "drift", name: "Drift", category: "Sci-Fi", collection: "original", desc: "A fast-moving pilot from the skyline circuit.", difficulty: "Intermediate", time: "45–60 min", art: "drift" },
+  { id: "cinder", name: "Cinder", category: "Fantasy", collection: "original", desc: "A tiny dragon with a huge sense of adventure.", difficulty: "Beginner", time: "30–45 min", art: "cinder" },
+  { id: "orbit", name: "Orbit", category: "Sci-Fi", collection: "original", desc: "A practical engineer keeping the crew on course.", difficulty: "Beginner", time: "30–45 min", art: "orbit" }
 ];
 
 const grid = document.querySelector('#blueprint-grid');
@@ -88,7 +52,7 @@ function card(b) {
 
       <div class="card-content">
 
-        <span class="category">${b.category}</span>
+        <span class="category">${b.category} · ${b.collection === "fan" ? "FAN CREATION" : "ORIGINAL"}</span>
 
         <h3>${b.name}</h3>
 
@@ -103,7 +67,7 @@ function card(b) {
           class="button ghost download"
           data-download="${b.id}"
         >
-          Download PDF ↓
+          ${b.pdf ? "Download PDF ↓" : "Blueprint coming soon"}
         </button>
 
       </div>
@@ -125,7 +89,8 @@ function render() {
     const filter =
       active === 'all' ||
       b.category.toLowerCase() === active ||
-      (active === 'beginner' && b.difficulty === 'Beginner');
+      (active === 'beginner' && b.difficulty === 'Beginner') ||
+      (active === 'fan' && b.collection === 'fan');
 
     const matchesSearch =
       b.name.toLowerCase().includes(term) ||
@@ -269,7 +234,7 @@ grid.addEventListener('click', event => {
       <div>
 
         <span class="category">
-          ${blueprint.category}
+          ${blueprint.category} · ${blueprint.collection === "fan" ? "FAN CREATION" : "ORIGINAL"}
         </span>
 
         <h2>${blueprint.name}</h2>
@@ -290,7 +255,7 @@ grid.addEventListener('click', event => {
             class="button primary"
             data-modal-download
           >
-            Download PDF
+            ${blueprint.pdf ? "Download PDF" : "Blueprint coming soon"}
           </button>
 
 
