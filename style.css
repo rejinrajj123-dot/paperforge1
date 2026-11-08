@@ -6,3 +6,14 @@
 .frame-lab-shell{width:100%;border:1px solid rgba(255,255,255,.10);border-radius:24px;overflow:hidden;background:#08090e;box-shadow:0 30px 90px rgba(0,0,0,.35)}
 .frame-lab-shell iframe{display:block;width:100%;height:1050px;border:0;background:#08090e}
 @media(max-width:800px){.frame-lab-shell iframe{height:1250px}.site-header nav{gap:14px;font-size:12px}}
+
+
+/* GENESIS SERIES — individual colour identities */
+.bp-art.mossback{--fc1:#b6e58b;--fc2:#397b58;background-color:#20372c}
+.bp-art.tidefin{--fc1:#73e8e1;--fc2:#2466a5;background-color:#142d43}
+.bp-art.prism{--fc1:#f4a8ff;--fc2:#7563e8;background-color:#302344}
+.bp-art.drift{--fc1:#ffbd78;--fc2:#e85c78;background-color:#3c2434}
+.bp-art.cinder{--fc1:#ffd18a;--fc2:#c84e38;background-color:#40251f}
+.bp-art.orbit{--fc1:#c3d7ff;--fc2:#5c76c9;background-color:#202b49}
+.bp-art.golem{--fc1:#b9c7a3;--fc2:#647b62;background-color:#28352c}
+.bp-card .category{display:inline-block;max-width:100%;line-height:1.5}
