@@ -809,3 +809,14 @@ footer>p{color:#d6d8ff}
   background:rgba(26,19,60,.64);
   backdrop-filter:blur(8px);
 }
+
+
+/* Rengoku fan creation cover — uses the supplied papercraft photo */
+.bp-art.rengoku{
+  background-color:#fff !important;
+  background-image:url("images/rengoku-cover.jpg") !important;
+  background-size:contain !important;
+  background-position:center center !important;
+  background-repeat:no-repeat !important;
+}
+.bp-art.rengoku .figure-shape{display:none !important}
