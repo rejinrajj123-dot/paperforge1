@@ -188,3 +188,31 @@ footer .brand{color:#292440}
     min-height:220px;
   }
 }
+
+
+/* PaperForge motion pass — subtle, playful and mobile-friendly */
+@keyframes brand-breathe{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(-3deg)}}
+@keyframes figure-float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-9px) rotate(1deg)}}
+@keyframes chip-drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes card-arrive{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.brand-mark{animation:brand-breathe 4.5s ease-in-out infinite}
+.chip-one{animation:chip-drift 4s ease-in-out infinite}
+.chip-two{animation:chip-drift 4.8s ease-in-out infinite reverse}
+.bp-card{animation:card-arrive .55s both;transform-origin:center bottom}
+.bp-card:nth-child(2){animation-delay:.05s}.bp-card:nth-child(3){animation-delay:.1s}.bp-card:nth-child(4){animation-delay:.15s}
+.bp-card:nth-child(5){animation-delay:.2s}.bp-card:nth-child(6){animation-delay:.25s}.bp-card:nth-child(7){animation-delay:.3s}.bp-card:nth-child(8){animation-delay:.35s}
+.bp-card:hover .figure-shape{animation:figure-float 1.8s ease-in-out infinite}
+.bp-art:before{transition:border-color .3s ease}
+.bp-card:hover .bp-art:before{border-color:#8b70e9}
+.button:active,.filter:active{transform:scale(.97)}
+.step-icon{display:inline-block;transition:transform .35s ease}
+.step:hover .step-icon{transform:translateY(-5px) rotate(-8deg) scale(1.08)}
+.step:hover,.pack:hover,.build-card:hover{transform:translateY(-5px);box-shadow:0 14px 28px #7255c51c}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 20px #8054f62a}
+.search:focus-within{border-color:#9274e9;box-shadow:0 0 0 4px #9274e91c}
+.brand-mark img{transition:transform .35s ease}
+.brand:hover .brand-mark img{transform:rotate(-12deg) scale(1.08)}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .reveal{opacity:1;transform:none}
+}
