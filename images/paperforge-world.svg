@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 2600" preserveAspectRatio="xMidYMid slice">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#b9a8ff"/><stop offset=".42" stop-color="#bdeeff"/><stop offset="1" stop-color="#fff0e8"/></linearGradient>
+ <linearGradient id="mount" x2="0" y2="1"><stop stop-color="#8b8be9"/><stop offset="1" stop-color="#5d8fb4"/></linearGradient>
+ <linearGradient id="hill" x2="0" y2="1"><stop stop-color="#b6e8c8"/><stop offset="1" stop-color="#66b99e"/></linearGradient>
+ <linearGradient id="sunset" x2="0" y2="1"><stop stop-color="#ffc4d9"/><stop offset="1" stop-color="#f7a8a2"/></linearGradient>
+ <filter id="soft"><feGaussianBlur stdDeviation="24"/></filter>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#544b9b" flood-opacity=".16"/></filter>
+ <g id="cloud" fill="#fff" opacity=".82"><ellipse cx="0" cy="20" rx="100" ry="28"/><ellipse cx="-42" cy="5" rx="45" ry="38"/><ellipse cx="12" cy="-10" rx="56" ry="52"/><ellipse cx="62" cy="8" rx="48" ry="35"/></g>
+ <g id="tree" filter="url(#shadow)"><path d="M0 0v110" stroke="#96766d" stroke-width="17" stroke-linecap="round"/><path d="M0 8C-85 5-100-60-55-88C-35-140 40-137 55-91C105-62 74 5 0 8Z" fill="#6fbd9d"/><path d="M-10-22C-65-40-48-91-12-98C18-121 70-77 42-36Z" fill="#a9dfb8"/></g>
+</defs>
+<rect width="1600" height="2600" fill="url(#sky)"/>
+<circle cx="1280" cy="260" r="210" fill="#fff5d7" opacity=".48" filter="url(#soft)"/>
+<circle cx="1280" cy="260" r="105" fill="#fff7df" opacity=".8"/>
+<g opacity=".78"><use href="#cloud" x="160" y="260"/><use href="#cloud" x="740" y="430" transform="scale(1.1)"/><use href="#cloud" x="1390" y="570" transform="scale(.8)"/></g>
+<!-- Floating paper sheets -->
+<g fill="#fff" stroke="#9c8fe1" stroke-opacity=".45" stroke-width="3" filter="url(#shadow)">
+ <path d="M230 650l120-34 40 100-120 34Z"/><path d="M350 616l40 100-40-28Z" fill="#dcd7ff"/>
+ <path d="M1190 830l135-20 20 110-135 20Z"/><path d="M1325 810l20 110-42-25Z" fill="#d7f2ff"/>
+ <path d="M190 1490l120-30 32 90-120 30Z"/><path d="M310 1460l32 90-42-24Z" fill="#d8f4ff"/>
+ <path d="M1280 1900l120-30 30 100-120 30Z"/><path d="M1400 1870l30 100-40-25Z" fill="#e5dcff"/>
+</g>
+<!-- distant folded-paper mountains -->
+<path d="M0 980L210 700l160 190 190-300 230 370 180-270 220 250 180-210 230 260v420H0Z" fill="url(#mount)" opacity=".55"/>
+<path d="M0 1080l240-250 180 210 230-330 210 360 220-250 180 210 170-190 170 220v360H0Z" fill="#a4b5e8" opacity=".62"/>
+<path d="M400 830l160-240 112 175-92-42-32 70Z M1040 850l150-185 112 155-92-35-28 55Z" fill="#fff" opacity=".72"/>
+<!-- paper-cut forest hills -->
+<path d="M0 1190Q250 1030 500 1200T1000 1170T1600 1140V1750H0Z" fill="url(#hill)"/>
+<path d="M0 1390Q260 1220 560 1390T1100 1340T1600 1320V1880H0Z" fill="#9edcb9" opacity=".88"/>
+<g><use href="#tree" x="140" y="1240"/><use href="#tree" x="340" y="1320" transform="scale(.8)"/><use href="#tree" x="1370" y="1240"/><use href="#tree" x="1510" y="1330" transform="scale(.78)"/></g>
+<!-- origami crane -->
+<g transform="translate(820 1060)" filter="url(#shadow)"><path d="M0 0l-110-65 75 105-105 35 140-15 120 35-85-65 85-85Z" fill="#fff" stroke="#8b82d6" stroke-width="5"/><path d="M0 0l-35 40 70 55-10-70 95-80Z" fill="#d6d0ff"/><path d="M-35 40l-105 35 140-15Z" fill="#b7e9ff"/></g>
+<!-- lower sunset scene -->
+<rect y="1770" width="1600" height="830" fill="url(#sunset)" opacity=".7"/>
+<circle cx="800" cy="2050" r="270" fill="#fff0d2" opacity=".45" filter="url(#soft)"/>
+<path d="M0 2140Q260 1950 520 2140T1060 2110T1600 2070V2600H0Z" fill="#b4d9c6"/>
+<path d="M0 2310Q320 2100 620 2310T1200 2240T1600 2270V2600H0Z" fill="#8dcbb1"/>
+<!-- stylized torii gate -->
+<g transform="translate(1190 1940)" fill="#d86f91" filter="url(#shadow)"><path d="M-120 0h260v32h-260z"/><path d="M-145-25h310v24h-310z"/><path d="M-85 10h28v250h-28zM65 10h28v250H65z"/><path d="M-120 70h260v18h-260z" fill="#f2a2b5"/></g>
+<!-- blossoms -->
+<g fill="#fff0f8" opacity=".9"><circle cx="210" cy="2050" r="18"/><circle cx="238" cy="2030" r="17"/><circle cx="255" cy="2060" r="19"/><circle cx="225" cy="2080" r="16"/><circle cx="1370" cy="2220" r="18"/><circle cx="1400" cy="2200" r="16"/><circle cx="1420" cy="2230" r="19"/></g>
+<!-- subtle folded paper facets -->
+<g fill="none" stroke="#fff" stroke-width="3" opacity=".32"><path d="M0 420l400 240 330-210 420 260 450-180"/><path d="M0 1620l300-160 360 210 370-190 570 190"/><path d="M0 2440l420-180 350 190 390-170 440 150"/></g>
+</svg>
