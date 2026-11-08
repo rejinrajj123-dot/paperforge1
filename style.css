@@ -820,3 +820,14 @@ footer>p{color:#d6d8ff}
   background-repeat:no-repeat !important;
 }
 .bp-art.rengoku .figure-shape{display:none !important}
+
+
+/* Rengoku cover uses the optimized WebP uploaded to the repository */
+.bp-art.rengoku{
+  background-image:url("images/rengoku-cover.webp") !important;
+  background-size:contain !important;
+  background-position:center center !important;
+  background-repeat:no-repeat !important;
+  background-color:#fff !important;
+}
+.bp-art.rengoku .figure-shape{display:none !important}
