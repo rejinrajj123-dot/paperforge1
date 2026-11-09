@@ -1669,8 +1669,8 @@
     });
   }
   function renderAsymmetric(){
-    if(!window.canvas2D || !window.ctx2D)return;
-    const c=window.canvas2D,ctx=window.ctx2D;
+    if(typeof canvas2D==='undefined' || !canvas2D || typeof ctx2D==='undefined' || !ctx2D)return;
+    const c=canvas2D,ctx=ctx2D;
     const W=c.width,H=c.height;
     ctx.clearRect(0,0,W,H);
     ctx.fillStyle='#f4f2ff';ctx.fillRect(0,0,W,H);
