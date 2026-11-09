@@ -862,3 +862,14 @@ footer>p{color:#d6d8ff}
   margin-top:auto;
   flex:0 0 auto;
 }
+
+
+/* Frame Lab is a standalone destination linked from the homepage. */
+.frame-lab-link{
+  border-color:rgba(83,222,251,.42);
+  background:linear-gradient(115deg,rgba(155,101,255,.16),rgba(83,222,251,.14));
+}
+.frame-lab-link:hover{
+  border-color:var(--cyan);
+  box-shadow:0 10px 28px rgba(83,222,251,.16);
+}
