@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PAPERFORGE // Frame Lab — Design. Fold. Display.</title>
+  <title>PaperForge Frame Lab — Easy paper frame maker</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -125,6 +125,74 @@
       letter-spacing: 0.05em;
       text-transform: uppercase;
     }
+
+    /* ===== PaperForge colourful, beginner-friendly Frame Lab theme ===== */
+    :root{color-scheme:light}
+    body{background:linear-gradient(145deg,#f8f5ff 0%,#edf5ff 48%,#f1fff9 100%)!important;color:#25234b!important}
+    .bg-blueprint-grid{background-image:radial-gradient(rgba(112,91,210,.13) 1px,transparent 1px),linear-gradient(135deg,rgba(255,255,255,.45),rgba(235,241,255,.35))!important;background-size:22px 22px,100% 100%!important}
+    header{background:rgba(255,255,255,.88)!important;border-color:#ddd8ff!important;box-shadow:0 8px 30px rgba(91,75,160,.09)}
+    header .text-white{color:#28234f!important} header .text-gray-400{color:#777493!important}
+    header .bg-forge-cyan{background:linear-gradient(100deg,#7545ed,#3f9df5)!important;color:#fff!important}
+    #heroSection{background:linear-gradient(120deg,rgba(255,255,255,.96),rgba(235,231,255,.9),rgba(225,246,255,.9))!important;border-color:#ddd8ff!important}
+    #heroSection .text-white{color:#25234b!important} #heroSection .text-gray-300{color:#666487!important}
+    #heroSection .text-blueprint-500,#heroSection .text-forge-cyan{color:#674bd5!important}
+    #heroSection .bg-paper-950{background:rgba(255,255,255,.8)!important}
+    #heroSection .border-blueprint-500\/40{border-color:#c9c0ff!important}
+    main{background:transparent!important}
+    main>aside{background:rgba(255,255,255,.94)!important;border-color:#dedafa!important;color:#302c56!important}
+    main>aside .sticky{background:rgba(255,255,255,.96)!important;border-color:#e7e2ff!important}
+    main>aside .text-white,main>aside .text-gray-300{color:#302c56!important}
+    main>aside .text-gray-400,main>aside .text-gray-500{color:#777493!important}
+    main>aside .text-forge-cyan,main>aside .text-blueprint-500{color:#6846d9!important}
+    main>aside .border-blueprint\/20,main>aside .border-blueprint\/30{border-color:#e8e3fb!important}
+    main>aside .bg-paper-950,main>aside select,main>aside input:not([type=range]){background:#fff!important;color:#302c56!important;border-color:#d9d2f4!important}
+    main>aside input::placeholder{color:#9994b2!important}
+    main>aside .bg-blueprint-900\/40,main>aside .bg-blueprint-900\/30{background:#f1edff!important}
+    main>aside .shape-btn{background:#fff!important;color:#777493!important;border-color:#ded8f5!important}
+    main>aside .shape-btn.active{background:linear-gradient(135deg,#eee8ff,#e4f6ff)!important;color:#6846d9!important;border-color:#9879f2!important;box-shadow:0 5px 14px rgba(115,83,216,.12)}
+    main>aside .preset-dim-btn{background:#fff!important;color:#665d91!important;border-color:#ded8f5!important}
+    main>aside .preset-dim-btn:hover{background:#f0eaff!important;color:#5638c5!important}
+    main>section{background:linear-gradient(145deg,#f5f4ff,#e9f6ff)!important}
+    main>section>div:first-child{background:rgba(255,255,255,.88)!important;border-color:#ddd8ff!important}
+    main>section .bg-paper-950{background:#fff!important}
+    main>section .text-white{color:#302c56!important}
+    main>section .text-gray-400,main>section .text-gray-300{color:#777493!important}
+    main>section .text-forge-cyan,main>section .text-blueprint-500{color:#6846d9!important}
+    main>section .border-blueprint-500\/30,main>section .border-blueprint-500\/40{border-color:#d9d2f4!important}
+    main>section .bg-forge-cyan{background:linear-gradient(100deg,#7545ed,#3f9df5)!important;color:#fff!important}
+    main>section .bg-blueprint-900\/40{background:#f0edff!important}
+    main>section .bg-paper-900\/90{background:rgba(255,255,255,.9)!important}
+    .fl-welcome{background:linear-gradient(125deg,#f1eaff,#e6f6ff 65%,#e9fff5);border:1px solid #d9d0ff;color:#39315f;box-shadow:0 8px 24px rgba(100,78,180,.08)}
+    .fl-welcome strong{color:#4d36a7;font-size:14px}
+    .fl-welcome p{color:#686487;line-height:1.55}
+    .fl-step-dot{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:50%;background:linear-gradient(135deg,#8855f2,#40b8e8);color:white}
+    .fl-mini-steps{display:flex;flex-wrap:wrap;gap:6px;padding-top:5px}
+    .fl-mini-steps span{font-size:10px;font-weight:700;color:#5c48aa;background:rgba(255,255,255,.8);border:1px solid #ddd4ff;border-radius:999px;padding:5px 8px}
+    #container2D,#container3D{background:radial-gradient(circle at 50% 30%,#fff 0%,#f1efff 55%,#e5f4ff 100%)!important}
+    #validationBanner{border-radius:14px}
+    #btnDownloadPDF{background:linear-gradient(100deg,#7545ed,#477ce9 60%,#25b7d5)!important;color:#fff!important;box-shadow:0 10px 24px rgba(91,72,205,.2)!important}
+    #btnExportSVG{background:#f2efff!important;color:#6546c9!important;border-color:#d7cdfa!important}
+    button,select,input{font-family:Inter,sans-serif}
+    button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid rgba(112,78,222,.25)!important;outline-offset:2px}
+    input[type=range]{accent-color:#7650df}
+    ::-webkit-scrollbar-track{background:#f2efff}
+    ::-webkit-scrollbar-thumb{background:#c5b8f1}
+    ::-webkit-scrollbar-thumb:hover{background:#8665e8}
+    @media(max-width:1023px){
+      main{overflow:visible!important}
+      main>aside{height:auto!important;max-height:none!important;overflow:visible!important;border-right:0!important;border-bottom:1px solid #dedafa}
+      main>section{min-height:620px!important}
+      #foldControlBar{flex-wrap:wrap}
+    }
+    @media(max-width:640px){
+      header nav{display:none}
+      #btnTopGenerate span{display:inline}
+      main>section{min-height:540px!important}
+      #view2D span,#view3D span,#viewSplit span{font-size:10px}
+      #foldControlBar{width:100%;justify-content:space-between}
+      .fl-mini-steps span{font-size:9px}
+    }
+
   </style>
 </head>
 <body class="min-h-screen flex flex-col bg-blueprint-grid">
@@ -259,7 +327,7 @@
       <div class="p-4 border-b border-blueprint/30 bg-paper-950/60 sticky top-0 z-20 flex items-center justify-between">
         <div class="flex items-center space-x-2">
           <i data-lucide="sliders" class="w-4 h-4 text-forge-cyan"></i>
-          <h2 class="font-mono text-xs font-bold text-white uppercase tracking-wider">FRAME GEOMETRY CONTROLS</h2>
+          <h2 class="font-mono text-xs font-bold text-white uppercase tracking-wider">Your frame settings</h2>
         </div>
         <!-- Units Switcher -->
         <div class="flex items-center bg-paper-950 rounded border border-blueprint-500/30 p-0.5 text-[11px] font-mono">
@@ -269,11 +337,16 @@
       </div>
 
       <div class="p-4 space-y-6">
+        <div class="fl-welcome rounded-2xl p-4 space-y-2">
+          <div class="flex items-center gap-2"><span class="fl-step-dot">✦</span><strong>Let’s make your frame!</strong></div>
+          <p class="text-sm">New here? Pick a preset, adjust the size, preview your design, then download the printable PDF.</p>
+          <div class="fl-mini-steps"><span>1. Choose</span><span>2. Customize</span><span>3. Preview</span><span>4. Download</span></div>
+        </div>
 
         <!-- PRESETS SELECTOR -->
         <div class="space-y-2">
           <label class="text-xs font-mono text-gray-300 flex items-center justify-between">
-            <span>QUICK PRESETS</span>
+            <span>START WITH A PRESET</span>
             <span class="text-[10px] text-blueprint-500 font-normal">LOAD & EDIT</span>
           </label>
           <select id="presetSelect" class="w-full bg-paper-950 border border-blueprint-500/40 rounded-md px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-forge-cyan">
@@ -291,7 +364,7 @@
         <div class="space-y-2 border-t border-blueprint/20 pt-4">
           <label class="text-xs font-mono text-gray-300 flex items-center space-x-1.5">
             <i data-lucide="shapes" class="w-3.5 h-3.5 text-forge-cyan"></i>
-            <span>1. FRAME SHAPE</span>
+            <span>1. Choose a frame shape</span>
           </label>
           <div class="grid grid-cols-4 gap-1.5">
             <button data-shape="rectangle" class="shape-btn active p-2 rounded bg-blueprint-900/40 border border-forge-cyan text-forge-cyan flex flex-col items-center justify-center text-[10px] font-mono hover:bg-blueprint-900 transition-all">
@@ -334,7 +407,7 @@
           <div class="flex items-center justify-between">
             <label class="text-xs font-mono text-gray-300 flex items-center space-x-1.5">
               <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-forge-cyan"></i>
-              <span>2. PHOTO WINDOW SIZE</span>
+              <span>2. Set your photo size</span>
             </label>
             <!-- Aspect Ratio Lock Toggle -->
             <button id="btnLockAspect" class="flex items-center space-x-1 text-[10px] font-mono text-forge-cyan bg-forge-cyan/10 px-2 py-0.5 rounded border border-forge-cyan/30">
@@ -380,7 +453,7 @@
         <div class="space-y-3 border-t border-blueprint/20 pt-4">
           <label class="text-xs font-mono text-gray-300 flex items-center space-x-1.5">
             <i data-lucide="box" class="w-3.5 h-3.5 text-forge-cyan"></i>
-            <span>3. BORDER & FOLD DEPTH</span>
+            <span>3. Set border and depth</span>
           </label>
 
           <!-- Frame Border Width -->
@@ -412,7 +485,7 @@
         <div class="space-y-3 border-t border-blueprint/20 pt-4">
           <label class="text-xs font-mono text-gray-300 flex items-center space-x-1.5">
             <i data-lucide="palette" class="w-3.5 h-3.5 text-forge-cyan"></i>
-            <span>4. STYLE & CORNER CUTS</span>
+            <span>4. Pick a look</span>
           </label>
 
           <div class="grid grid-cols-2 gap-2">
@@ -441,13 +514,13 @@
         <div class="space-y-3 border-t border-blueprint/20 pt-4">
           <label class="text-xs font-mono text-gray-300 flex items-center space-x-1.5">
             <i data-lucide="image" class="w-3.5 h-3.5 text-forge-cyan"></i>
-            <span>5. EMBEDDED PHOTO</span>
+            <span>5. Add your photo (optional)</span>
           </label>
 
           <div class="flex items-center space-x-2">
             <label class="flex-1 flex items-center justify-center space-x-2 px-3 py-2 bg-blueprint-900/30 hover:bg-blueprint-900/60 border border-blueprint-500/40 border-dashed rounded cursor-pointer text-xs font-mono text-blueprint-500 transition-all">
               <i data-lucide="upload" class="w-4 h-4"></i>
-              <span id="uploadLabelText">CHOOSE PHOTO...</span>
+              <span id="uploadLabelText">Upload a photo</span>
               <input type="file" id="photoInput" accept="image/*" class="hidden">
             </label>
             <button id="btnClearPhoto" class="px-2.5 py-2 bg-paper-950 border border-blueprint-500/30 text-gray-400 hover:text-red-400 rounded text-xs font-mono">
@@ -473,7 +546,7 @@
         <div class="space-y-3 border-t border-blueprint/20 pt-4">
           <label class="text-xs font-mono text-gray-300 flex items-center space-x-1.5">
             <i data-lucide="type" class="w-3.5 h-3.5 text-forge-cyan"></i>
-            <span>6. FRAME TEXT ENGRAVING</span>
+            <span>6. Add a title (optional)</span>
           </label>
 
           <input type="text" id="customText" placeholder="e.g. OUR MEMORIES • 2026" class="w-full bg-paper-950 border border-blueprint-500/40 rounded px-3 py-1.5 text-xs font-mono text-white placeholder-gray-600 focus:outline-none focus:border-forge-cyan">
@@ -483,7 +556,7 @@
         <div class="space-y-3 border-t border-blueprint/20 pt-4">
           <label class="text-xs font-mono text-gray-300 flex items-center space-x-1.5">
             <i data-lucide="file-text" class="w-3.5 h-3.5 text-forge-cyan"></i>
-            <span>7. TARGET PAPER SETUP</span>
+            <span>7. Choose your paper</span>
           </label>
 
           <div class="grid grid-cols-2 gap-2">
@@ -518,15 +591,15 @@
         <div class="flex items-center space-x-1 bg-paper-950 rounded-md p-1 border border-blueprint-500/30 text-xs font-mono">
           <button id="view2D" class="view-tab active px-3 py-1 rounded bg-forge-cyan text-paper-950 font-bold flex items-center space-x-1.5 transition-all">
             <i data-lucide="layout" class="w-3.5 h-3.5"></i>
-            <span>2D BLUEPRINT</span>
+            <span>Flat template</span>
           </button>
           <button id="view3D" class="view-tab px-3 py-1 rounded text-gray-400 hover:text-white flex items-center space-x-1.5 transition-all">
             <i data-lucide="box" class="w-3.5 h-3.5"></i>
-            <span>3D FOLDED</span>
+            <span>3D preview</span>
           </button>
           <button id="viewSplit" class="view-tab px-3 py-1 rounded text-gray-400 hover:text-white flex items-center space-x-1.5 transition-all">
             <i data-lucide="columns" class="w-3.5 h-3.5"></i>
-            <span>SPLIT STUDIO</span>
+            <span>Both views</span>
           </button>
         </div>
 
@@ -551,7 +624,7 @@
           </button>
           <button id="btnAutoFit" class="px-2.5 py-1 bg-blueprint-900/50 hover:bg-blueprint-900 border border-blueprint-500/40 text-xs font-mono text-forge-cyan rounded flex items-center space-x-1">
             <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-            <span>AUTO-FIT A4</span>
+            <span>Fit to page</span>
           </button>
         </div>
       </div>
@@ -695,12 +768,12 @@
       <div class="space-y-2 pt-4 border-t border-blueprint/30">
         <button id="btnDownloadPDF" class="w-full py-3 bg-forge-cyan hover:bg-cyan-400 text-paper-950 font-mono font-bold text-xs rounded-md shadow-lg shadow-forge-cyan/20 flex items-center justify-center space-x-2 transition-all transform hover:-translate-y-0.5">
           <i data-lucide="download" class="w-4 h-4"></i>
-          <span>DOWNLOAD PRINTABLE PDF</span>
+          <span>Download my printable PDF</span>
         </button>
 
         <button id="btnExportSVG" class="w-full py-2 bg-blueprint-900/40 hover:bg-blueprint-900 border border-blueprint-500/40 text-blueprint-500 hover:text-white font-mono text-xs rounded-md transition-all flex items-center justify-center space-x-2">
           <i data-lucide="code" class="w-3.5 h-3.5"></i>
-          <span>EXPORT VECTOR SVG</span>
+          <span>Download SVG (advanced)</span>
         </button>
       </div>
 
@@ -804,11 +877,11 @@
       const h = canvas2D.height;
 
       // Clear canvas
-      ctx2D.fillStyle = '#0B0D12';
+      ctx2D.fillStyle = '#f5f4ff';
       ctx2D.fillRect(0, 0, w, h);
 
       // Draw subtle grid pattern
-      ctx2D.strokeStyle = 'rgba(0, 186, 255, 0.08)';
+      ctx2D.strokeStyle = 'rgba(117, 91, 205, 0.12)';
       ctx2D.lineWidth = 1;
       const gridSize = 40;
       for (let x = 0; x < w; x += gridSize) {
@@ -842,15 +915,15 @@
       const originY = (h - paperPxH) / 2;
 
       // DRAW TARGET PAPER SHEET BOUNDARY
-      ctx2D.fillStyle = '#111622';
+      ctx2D.fillStyle = '#ffffff';
       ctx2D.fillRect(originX, originY, paperPxW, paperPxH);
-      ctx2D.strokeStyle = 'rgba(0, 186, 255, 0.4)';
+      ctx2D.strokeStyle = 'rgba(117, 91, 205, 0.55)';
       ctx2D.lineWidth = 1.5;
       ctx2D.strokeRect(originX, originY, paperPxW, paperPxH);
 
       // Draw Paper Title Annotation
       ctx2D.font = '12px "JetBrains Mono", monospace';
-      ctx2D.fillStyle = 'rgba(0, 186, 255, 0.6)';
+      ctx2D.fillStyle = '#6c50c9';
       ctx2D.fillText(`PAPER SHEET: ${state.paperSize} (${paperW_mm} × ${paperH_mm} mm)`, originX + 10, originY + 20);
 
       // CALCULATE FRAME GEOMETRY IN MILLIMETERS (Centered on Sheet)
@@ -884,10 +957,10 @@
         ctx2D.restore();
       } else {
         // Photo Placeholder Diagonal Hatching
-        ctx2D.fillStyle = 'rgba(0, 186, 255, 0.05)';
+        ctx2D.fillStyle = 'rgba(117, 91, 205, 0.07)';
         ctx2D.fillRect(photoLeft, photoTop, pW, pH);
         ctx2D.font = '14px "JetBrains Mono", monospace';
-        ctx2D.fillStyle = '#00BAFF';
+        ctx2D.fillStyle = '#6c50c9';
         ctx2D.textAlign = 'center';
         ctx2D.fillText('□ PHOTO WINDOW', centerX, centerY - 5);
         ctx2D.font = '11px "JetBrains Mono", monospace';
@@ -896,17 +969,17 @@
       }
 
       // DRAW CUT LINES (Outer Frame Front Face)
-      ctx2D.strokeStyle = '#00F0FF'; // Bright Cyan Cut Line
+      ctx2D.strokeStyle = '#287fc7'; // Blue cut line
       ctx2D.lineWidth = 2;
       ctx2D.strokeRect(centerX - outerW / 2, centerY - outerH / 2, outerW, outerH);
 
       // DRAW INNER CUT LINE (Photo Window Opening)
-      ctx2D.strokeStyle = '#00F0FF';
+      ctx2D.strokeStyle = '#287fc7';
       ctx2D.lineWidth = 2;
       ctx2D.strokeRect(photoLeft, photoTop, pW, pH);
 
       // DRAW MOUNTAIN FOLD LINES & SIDE WALL PANELS (Depth Flaps)
-      ctx2D.strokeStyle = '#FF9E00'; // Amber Mountain Fold Line
+      ctx2D.strokeStyle = '#e49a35'; // Amber mountain fold line
       ctx2D.lineWidth = 1.5;
       ctx2D.setLineDash([6, 4]);
 
