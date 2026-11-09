@@ -33,10 +33,13 @@ footer{text-align:center;color:#8985a4;font-size:12px;padding:30px}
 <h2>AI Template Customizer</h2>
 <div class="step"><b>1</b> Base template</div>
 <div class="field"><label>Selected template <small>V1 · Rengoku</small></label><div style="border:1px solid #e6def8;border-radius:12px;padding:10px;background:#faf8ff;font-weight:850">🔥 Flame Hero — papercraft sheet</div></div>
+<div class="field"><label for="basePdf">Upload the original template PDF <small>Required if the hosted template is unavailable</small></label><input id="basePdf" type="file" accept="application/pdf"><small>Choose the clean printable sheet PDF. The first page becomes the base layout.</small></div>
 <div class="step"><b>2</b> Add your photo (optional)</div>
 <div class="field"><label for="photo">Face / style reference <small>JPG, PNG, WEBP</small></label><input id="photo" type="file" accept="image/png,image/jpeg,image/webp"></div>
 <div class="field"><label for="photoUse">Use your photo for</label><select id="photoUse"><option value="face">Customize the character's face only</option><option value="style">Use as a general style reference</option><option value="none">Do not use my photo</option></select></div>
-<div class="step"><b>3</b> Tell AI what to change</div>
+<div class="step"><b>3</b> Protect the template layout</div>
+<div class="field"><label style="justify-content:flex-start;gap:9px"><input id="lockLines" type="checkbox" checked style="width:auto"> Keep original cut outlines and dark construction lines</label><small>PaperForge overlays the original linework on the AI result. This helps preserve the template, but still requires a visual check before printing.</small></div>
+<div class="step"><b>4</b> Tell AI what to change</div>
 <div class="field"><label for="prompt">Describe your character edits</label><textarea id="prompt" placeholder="Example: Change the hair to silver and blue, make the outfit teal and black, and add a small star emblem. Keep all paper tabs and cut lines exactly where they are."></textarea></div>
 <div class="field"><label>Quick ideas</label><div class="chips"><button class="chip" data-prompt="Change the hair to icy blue and silver.">❄️ Ice hair</button><button class="chip" data-prompt="Change the outfit colours to emerald green and gold.">💚 Green & gold</button><button class="chip" data-prompt="Give the character a cheerful friendly face while keeping the same face area.">😊 Friendly face</button><button class="chip" data-prompt="Create a purple cosmic colour theme with tiny star details.">🌌 Cosmic</button></div></div>
 <div class="field"><label for="apiKey">Gemini API key <small>required for AI generation</small></label><input id="apiKey" type="password" autocomplete="off" placeholder="Paste your Gemini API key"><small>Used only in this open tab; it is not saved by PaperForge. Requests go directly to Google.</small></div>
@@ -53,21 +56,48 @@ footer{text-align:center;color:#8985a4;font-size:12px;padding:30px}
 (() => {
 const $=id=>document.getElementById(id);
 const status=$('status'), sourceState=$('sourceState');
-let baseDataUrl='',photoDataUrl='',photoMime='',resultUrl='';
+let baseDataUrl='',baseCanvas=null,photoDataUrl='',photoMime='',resultUrl='';
 const setStatus=(msg,type='')=>{status.textContent=msg;status.className='status '+type};
+async function renderBaseDocument(source){
+ if(!window.pdfjsLib)throw new Error('PDF renderer did not load. Check your internet connection and refresh.');
+ pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ const pdf=await pdfjsLib.getDocument(source).promise;
+ const page=await pdf.getPage(1),viewport=page.getViewport({scale:2});
+ const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
+ canvas.width=viewport.width;canvas.height=viewport.height;
+ await page.render({canvasContext:ctx,viewport}).promise;
+ baseCanvas=canvas;baseDataUrl=canvas.toDataURL('image/png');
+ const img=new Image();img.src=baseDataUrl;img.alt='Original papercraft template';$('originalSheet').replaceChildren(img);
+ sourceState.textContent='Template ready';setStatus('Base template loaded. Its original page dimensions and linework will be used for the customized export.','good');
+}
 async function loadBase(){
- try{
-  if(!window.pdfjsLib)throw new Error('PDF renderer did not load. Check your internet connection and refresh.');
-  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  const pdf=await pdfjsLib.getDocument('rengoku.pdf').promise;
-  const page=await pdf.getPage(1),viewport=page.getViewport({scale:1.8});
-  const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
-  canvas.width=viewport.width;canvas.height=viewport.height;
-  await page.render({canvasContext:ctx,viewport}).promise;
-  baseDataUrl=canvas.toDataURL('image/png');
-  const img=new Image();img.src=baseDataUrl;img.alt='Original Rengoku papercraft template';$('originalSheet').replaceChildren(img);
-  sourceState.textContent='Template ready';setStatus('Base template loaded. Add your changes and generate a customized version.','good');
- }catch(e){sourceState.textContent='Could not load';$('originalSheet').innerHTML='<div class="empty">Could not load rengoku.pdf. Make sure the PDF is in the website root and refresh.</div>';setStatus(e.message,'error')}
+ try{await renderBaseDocument({url:'rengoku.pdf'});}
+ catch(e){sourceState.textContent='Upload required';$('originalSheet').innerHTML='<div class="empty">The hosted Rengoku PDF is not available yet.<br><strong>Upload your original template PDF</strong> in Step 1 to continue.</div>';setStatus('Upload the original Rengoku template PDF to start. The website does not currently contain rengoku.pdf.','error')}
+}
+$('basePdf').addEventListener('change',async e=>{
+ const file=e.target.files[0];if(!file)return;
+ if(file.type!=='application/pdf'){setStatus('Please choose a PDF file.','error');e.target.value='';return}
+ try{setStatus('Loading your uploaded base template…');await renderBaseDocument({data:await file.arrayBuffer()});}
+ catch(err){setStatus('Could not read that PDF. Try a valid, unlocked PDF. '+err.message,'error')}
+});
+async function overlayOriginalLinework(generatedUrl){
+ if(!$('lockLines').checked||!baseCanvas)return generatedUrl;
+ const generated=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=generatedUrl});
+ const c=document.createElement('canvas');c.width=baseCanvas.width;c.height=baseCanvas.height;
+ const ctx=c.getContext('2d',{willReadFrequently:true});
+ ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
+ ctx.drawImage(generated,0,0,c.width,c.height);
+ const out=ctx.getImageData(0,0,c.width,c.height),src=baseCanvas.getContext('2d',{willReadFrequently:true}).getImageData(0,0,c.width,c.height);
+ for(let i=0;i<src.data.length;i+=4){
+  const r=src.data[i],g=src.data[i+1],b=src.data[i+2],hi=Math.max(r,g,b),lo=Math.min(r,g,b),lum=.299*r+.587*g+.114*b;
+  if(lum<155&&hi-lo<58){
+   const alpha=lum<85?0.96:Math.min(0.82,(155-lum)/90);
+   out.data[i]=Math.round(r*alpha+out.data[i]*(1-alpha));
+   out.data[i+1]=Math.round(g*alpha+out.data[i+1]*(1-alpha));
+   out.data[i+2]=Math.round(b*alpha+out.data[i+2]*(1-alpha));
+  }
+ }
+ ctx.putImageData(out,0,0);return c.toDataURL('image/png');
 }
 function fileToData(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)})}
 $('photo').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;if(f.size>8*1024*1024){setStatus('Please choose a photo smaller than 8 MB.','error');e.target.value='';return}photoDataUrl=await fileToData(f);photoMime=f.type;setStatus('Photo reference added. It will be sent with your next Gemini edit.','good')});
@@ -92,9 +122,10 @@ $('generate').addEventListener('click',async()=>{
   const generated=responseParts.find(p=>p.inlineData?.data);
   if(!generated)throw new Error(responseParts.find(p=>p.text)?.text||'Gemini did not return an image. Try a simpler instruction.');
   resultUrl='data:'+(generated.inlineData.mimeType||'image/png')+';base64,'+generated.inlineData.data;
+  resultUrl=await overlayOriginalLinework(resultUrl);
   $('resultImage').src=resultUrl;$('resultPanel').classList.add('show');
   $('resultPanel').scrollIntoView({behavior:'smooth',block:'start'});
-  setStatus('Your customized sheet is ready. Check the fold tabs and cut lines before printing.','good');
+  setStatus($('lockLines').checked?'Customized sheet ready. Original dark linework has been overlaid. Check every piece and tab before printing.':'Customized sheet ready. Layout protection is off, so carefully compare every piece and tab with the original before printing.','good');
  }catch(err){setStatus(err.message,'error')}
  finally{btn.disabled=false;btn.textContent='✨ Generate with AI'}
 });
