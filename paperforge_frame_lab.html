@@ -468,6 +468,19 @@
             </div>
           </div>
 
+
+          <!-- Independent frame sides -->
+          <div class="rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-sky-50 p-3 space-y-3">
+            <div>
+              <p class="text-sm font-bold text-purple-800">Adjust each side separately</p>
+              <p class="text-xs text-slate-600">Changing one side will not change the opposite side.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="block text-xs font-semibold text-slate-700">Top side <span class="float-right text-purple-700" id="valSideTop">2.0 cm</span><input id="sideTop" type="range" min="0.5" max="8" step="0.1" value="2" class="mt-1 w-full"></label><label class="block text-xs font-semibold text-slate-700">Right side <span class="float-right text-purple-700" id="valSideRight">2.0 cm</span><input id="sideRight" type="range" min="0.5" max="8" step="0.1" value="2" class="mt-1 w-full"></label><label class="block text-xs font-semibold text-slate-700">Bottom side <span class="float-right text-purple-700" id="valSideBottom">2.0 cm</span><input id="sideBottom" type="range" min="0.5" max="8" step="0.1" value="2" class="mt-1 w-full"></label><label class="block text-xs font-semibold text-slate-700">Left side <span class="float-right text-purple-700" id="valSideLeft">2.0 cm</span><input id="sideLeft" type="range" min="0.5" max="8" step="0.1" value="2" class="mt-1 w-full"></label>
+            </div>
+            <button id="equalizeSides" type="button" class="w-full rounded-lg border border-purple-200 bg-white py-2 text-xs font-semibold text-purple-700">Make all sides equal</button>
+          </div>
+
           <!-- Frame Depth -->
           <div class="space-y-1">
             <div class="flex justify-between text-xs font-mono">
@@ -1641,5 +1654,106 @@
       draw2DBlueprint();
     }
   </script>
+
+<script>
+(function(){
+  const originalUpdateGeometry = window.updateGeometry;
+  const sideKeys = {Top:'top',Right:'right',Bottom:'bottom',Left:'left'};
+  const sides = {top:20,right:20,bottom:20,left:20};
+  function cm(v){return (v/10).toFixed(1);}
+  function syncSideUI(){
+    Object.entries(sideKeys).forEach(([label,key])=>{
+      const el=document.getElementById('side'+label), out=document.getElementById('valSide'+label);
+      if(el){el.value=cm(sides[key]);}
+      if(out)out.textContent=cm(sides[key])+' cm';
+    });
+  }
+  function renderAsymmetric(){
+    if(!window.canvas2D || !window.ctx2D)return;
+    const c=window.canvas2D,ctx=window.ctx2D;
+    const W=c.width,H=c.height;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#f4f2ff';ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='rgba(116,91,205,.12)';ctx.lineWidth=1;
+    for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    const pd=PAPER_SIZES[state.paperSize],pw=state.paperOrient==='portrait'?pd.w:pd.h,ph=state.paperOrient==='portrait'?pd.h:pd.w;
+    const scale=Math.min((W-160)/pw,(H-160)/ph),pageW=pw*scale,pageH=ph*scale,ox=(W-pageW)/2,oy=(H-pageH)/2;
+    ctx.fillStyle='#fff';ctx.fillRect(ox,oy,pageW,pageH);ctx.strokeStyle='#a99be8';ctx.lineWidth=2;ctx.strokeRect(ox,oy,pageW,pageH);
+    const cx=ox+pageW/2,cy=oy+pageH/2,photoW=state.photoW*scale,photoH=state.photoH*scale;
+    const L=sides.left*scale,R=sides.right*scale,T=sides.top*scale,B=sides.bottom*scale,D=state.depth*scale;
+    const x=cx-photoW/2-L,y=cy-photoH/2-T,w=photoW+L+R,h=photoH+T+B;
+    ctx.fillStyle='#f2efff';ctx.fillRect(cx-photoW/2,cy-photoH/2,photoW,photoH);
+    if(state.photoImg){ctx.save();ctx.beginPath();ctx.rect(cx-photoW/2,cy-photoH/2,photoW,photoH);ctx.clip();ctx.drawImage(state.photoImg,cx-photoW/2,cy-photoH/2,photoW,photoH);ctx.restore();}
+    else{ctx.fillStyle='#6c50c9';ctx.font='14px monospace';ctx.textAlign='center';ctx.fillText('PHOTO WINDOW',cx,cy);}
+    ctx.strokeStyle='#287fc7';ctx.lineWidth=2.5;ctx.strokeRect(x,y,w,h);
+    ctx.strokeStyle='#d58b28';ctx.setLineDash([7,5]);ctx.lineWidth=1.8;
+    ctx.beginPath();
+    ctx.moveTo(x,y);ctx.lineTo(cx-photoW/2,cy-photoH/2);
+    ctx.moveTo(x+w,y);ctx.lineTo(cx+photoW/2,cy-photoH/2);
+    ctx.moveTo(x,y+h);ctx.lineTo(cx-photoW/2,cy+photoH/2);
+    ctx.moveTo(x+w,y+h);ctx.lineTo(cx+photoW/2,cy+photoH/2);ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle='#18aeca';ctx.lineWidth=2;
+    ctx.strokeRect(x,y-D,w,D);ctx.strokeRect(x,y+h,w,D);
+    ctx.strokeRect(x-D,y,D,h);ctx.strokeRect(x+w,y,D,h);
+    ctx.fillStyle='#6846d9';ctx.font='12px monospace';ctx.textAlign='left';
+    ctx.fillText('TOP '+cm(sides.top)+' cm',x,y-D-8);
+    ctx.fillText('LEFT '+cm(sides.left)+' cm',x-D-4,y+h+18);
+    ctx.fillText('RIGHT '+cm(sides.right)+' cm',x+w+D+4,y+h+18);
+    ctx.fillText('BOTTOM '+cm(sides.bottom)+' cm',x+w-95,y+h+D+18);
+    ctx.fillStyle='#665b8f';ctx.font='12px monospace';ctx.fillText('A4 / '+state.paperSize+' • PRINT AT 100%',ox+12,oy+pageH-12);
+  }
+  function updateCustomStats(){
+    const flatW=state.photoW+sides.left+sides.right+2*state.depth;
+    const flatH=state.photoH+sides.top+sides.bottom+2*state.depth;
+    const pd=PAPER_SIZES[state.paperSize],pw=state.paperOrient==='portrait'?pd.w:pd.h,ph=state.paperOrient==='portrait'?pd.h:pd.w;
+    state.isValid=flatW<=pw&&flatH<=ph;
+    state.validMessage='Template '+cm(flatW)+' × '+cm(flatH)+' cm '+(state.isValid?'fits on':'does not fit on')+' '+state.paperSize+'.';
+    const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    set('statOuter',cm(state.photoW+sides.left+sides.right)+' × '+cm(state.photoH+sides.top+sides.bottom)+' cm');
+    set('specFlatW',cm(flatW)+' cm');set('specFlatH',cm(flatH)+' cm');
+    set('statPaper',state.paperSize+(state.isValid?' (1 Page)':' (OVERFLOW)'));
+    set('validTitle',state.isValid?'GEOMETRY VALIDATED // READY TO FORGE':'PRINT BOUNDARY WARNING');
+    set('validDetail',state.validMessage);
+    renderAsymmetric();
+  }
+  const oldGenerate=window.generatePDF;
+  window.generatePDF=function(){
+    const {jsPDF}=window.jspdf;
+    const orient=state.paperOrient==='portrait'?'p':'l',doc=new jsPDF({orientation:orient,unit:'mm',format:state.paperSize.toLowerCase()});
+    const pd=PAPER_SIZES[state.paperSize],pageW=state.paperOrient==='portrait'?pd.w:pd.h,pageH=state.paperOrient==='portrait'?pd.h:pd.w;
+    const cx=pageW/2,cy=pageH/2+5,pw=state.photoW,ph=state.photoH,L=sides.left,R=sides.right,T=sides.top,B=sides.bottom,D=state.depth;
+    const x=cx-pw/2-L,y=cy-ph/2-T,w=pw+L+R,h=ph+T+B;
+    doc.setFillColor(255,255,255);doc.rect(0,0,pageW,pageH,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(45,35,90);doc.text('PAPERFORGE FRAME LAB — CUSTOM FRAME NET',12,14);
+    doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('PHOTO WINDOW '+cm(pw)+' × '+cm(ph)+' cm | TOP '+cm(T)+' | RIGHT '+cm(R)+' | BOTTOM '+cm(B)+' | LEFT '+cm(L)+' cm',12,20);
+    doc.setDrawColor(35,120,190);doc.setLineWidth(.55);doc.rect(x,y,w,h);
+    doc.setDrawColor(220,70,100);doc.rect(cx-pw/2,cy-ph/2,pw,ph);
+    doc.setDrawColor(205,135,35);doc.setLineWidth(.35);doc.setLineDashPattern([2,2],0);
+    doc.rect(x,y-D,w,D);doc.rect(x,y+h,w,D);doc.rect(x-D,y,D,h);doc.rect(x+w,y,D,h);
+    doc.line(x,y,cx-pw/2,cy-ph/2);doc.line(x+w,y,cx+pw/2,cy-ph/2);
+    doc.line(x,y+h,cx-pw/2,cy+ph/2);doc.line(x+w,y+h,cx+pw/2,cy+ph/2);
+    doc.setLineDashPattern([],0);doc.setDrawColor(0,0,0);doc.line(12,pageH-14,62,pageH-14);doc.line(12,pageH-17,12,pageH-11);doc.line(62,pageH-17,62,pageH-11);doc.setFontSize(7);doc.text('50 mm scale check — print at 100%',12,pageH-7);
+    doc.save('PaperForge-Custom-Frame-'+cm(pw)+'x'+cm(ph)+'cm.pdf');
+  };
+  const originalOnload=window.onload;
+  window.onload=function(){
+    if(originalOnload)originalOnload();
+    Object.entries(sideKeys).forEach(([label,key])=>{
+      const el=document.getElementById('side'+label);
+      if(el)el.addEventListener('input',()=>{sides[key]=parseFloat(el.value)*10;syncSideUI();updateCustomStats();});
+    });
+    const equal=document.getElementById('equalizeSides');
+    if(equal)equal.addEventListener('click',()=>{const v=sides.top;sides.right=v;sides.bottom=v;sides.left=v;syncSideUI();updateCustomStats();});
+    const general=document.getElementById('sliderBorderW');
+    if(general)general.addEventListener('input',()=>{const v=parseFloat(general.value)*10;Object.keys(sides).forEach(k=>sides[k]=v);syncSideUI();updateCustomStats();});
+    const auto=document.getElementById('btnAutoFit');
+    if(auto)auto.addEventListener('click',()=>{Object.keys(sides).forEach(k=>sides[k]=20);syncSideUI();setTimeout(updateCustomStats,0);});
+    syncSideUI();updateCustomStats();
+  };
+  window.addEventListener('resize',()=>setTimeout(renderAsymmetric,50));
+})();
+</script>
+
 </body>
 </html>
