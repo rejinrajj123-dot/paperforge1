@@ -89,34 +89,31 @@ function rebuild3D(w,h,d){
  camera.position.set(Math.max(w,h,d)*1.55,Math.max(w,h,d)*1.25,Math.max(w,h,d)*1.75);controls.target.set(0,0,0);controls.update();
 }
 function makeNet(w,h,d,tabs){
- const tab= tabs?Number($('tab').value):0;
- // Four wall panels in a row; top and bottom panels attach to the front wall.
- const pad=tab+0.6, totalW=2*w+2*d+2*tab, totalH=h+2*d+2*tab;
+ const tab=tabs?Number($('tab').value):0,margin=.6;
+ const totalW=2*w+2*d+2*tab+2*margin,totalH=h+2*d+2*margin;
  const scale=Math.min(680/(totalW*10),520/(totalH*10));
  const W=totalW*10*scale,H=totalH*10*scale;
- const x0=pad*10*scale,y0=pad*10*scale,ww=w*10*scale,hh=h*10*scale,dd=d*10*scale,tt=tab*10*scale;
+ const mm=v=>v*10*scale;
+ const left=mm(margin+tab),front=left+mm(d),right=front+mm(w),back=right+mm(d),end=back+mm(w);
+ const top=mm(margin),mid=top+mm(d),bottom=mid+mm(h),endY=bottom+mm(d),tt=mm(tab);
  const svg=$('netPreview');svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('width',W);svg.setAttribute('height',H);svg.innerHTML='';
  const NS='http://www.w3.org/2000/svg';
  function el(name,attrs,parent){const n=document.createElementNS(NS,name);Object.keys(attrs).forEach(k=>n.setAttribute(k,attrs[k]));(parent||svg).appendChild(n);return n}
  el('rect',{x:0,y:0,width:W,height:H,rx:8,fill:'#fff',stroke:'#e4e0f2'});
- const left=x0+tt,front=left+dd,right=front+ww,back=right+dd;
- const top=y0+tt,mid=top+dd,bottom=mid+hh;
- const panels=[[left,mid,dd,hh,'SIDE'],[front,mid,ww,hh,'FRONT'],[right,mid,dd,hh,'SIDE'],[back,mid,ww,hh,'BACK'],[front,top,ww,dd,'TOP'],[front,bottom,ww,dd,'BOTTOM']];
- panels.forEach((p,i)=>{el('rect',{x:p[0],y:p[1],width:p[2],height:p[3],fill:['#e8f6ff','#eee9ff','#e8fff5','#fff1e5','#fff4cf','#ffe8f0'][i],stroke:'#6d5ac5','stroke-width':1.5});const tx=el('text',{x:p[0]+p[2]/2,y:p[1]+p[3]/2+3,'text-anchor':'middle','font-size':Math.max(8,Math.min(13,p[2]/8)),'font-family':'Arial','font-weight':'700',fill:'#5c5487'});tx.textContent=p[4]});
- // Fold lines are the seams between adjoining panels.
- [[front,mid,front,bottom],[right,mid,right,bottom],[front,mid,back,mid],[front,top,front,mid],[front,bottom,front,bottom+dd]].forEach(a=>el('line',{x1:a[0],y1:a[1],x2:a[2],y2:a[3],stroke:'#9a78e8','stroke-width':1.5,'stroke-dasharray':'6 4'}));
- // Outer cut outline and optional glue tabs along the far outer side edges.
- el('rect',{x:left,y:mid,width:2*w*10*scale+2*d*10*scale,height:hh,fill:'none',stroke:'#30305d','stroke-width':2});
- if(tabs&&tt>0){
-  [[left,mid,dd,hh],[back,mid,ww,hh],[front,top,ww,dd],[front,bottom,ww,dd]].forEach((p,i)=>{
-   let x=p[0],y=p[1],pw=p[2],ph=p[3];
-   if(i===0||i===1){const dir=i===0?-1:1;el('path',{d:'M '+x+' '+y+' L '+(x+dir*tt)+' '+(y+tt*.45)+' L '+(x+dir*tt)+' '+(y+ph-tt*.45)+' L '+x+' '+(y+ph),fill:'#fff0b8',stroke:'#30305d','stroke-width':1.4})}
-  });
- }
- // Dimension labels
+ const panels=[[left,mid,mm(d),mm(h),'SIDE','#e8f6ff'],[front,mid,mm(w),mm(h),'FRONT','#eee9ff'],[right,mid,mm(d),mm(h),'SIDE','#e8fff5'],[back,mid,mm(w),mm(h),'BACK','#fff1e5'],[front,top,mm(w),mm(d),'TOP','#fff4cf'],[front,bottom,mm(w),mm(d),'BOTTOM','#ffe8f0']];
+ panels.forEach(p=>{el('rect',{x:p[0],y:p[1],width:p[2],height:p[3],fill:p[5],stroke:'none'});const tx=el('text',{x:p[0]+p[2]/2,y:p[1]+p[3]/2+3,'text-anchor':'middle','font-size':Math.max(8,Math.min(13,p[2]/8)),'font-family':'Arial','font-weight':'700',fill:'#5c5487'});tx.textContent=p[4]});
+ const outline='M '+front+' '+top+' L '+right+' '+top+' L '+right+' '+mid+' L '+end+' '+mid+
+ (tabs&&tt>0?' L '+(end+tt)+' '+(mid+tt*.45)+' L '+(end+tt)+' '+(bottom-tt*.45):' L '+end+' '+mid)+
+ ' L '+end+' '+bottom+' L '+right+' '+bottom+' L '+right+' '+endY+' L '+front+' '+endY+
+ ' L '+front+' '+bottom+' L '+left+' '+bottom+
+ (tabs&&tt>0?' L '+(left-tt)+' '+(bottom-tt*.45)+' L '+(left-tt)+' '+(mid+tt*.45):'')+
+ ' L '+left+' '+mid+' L '+front+' '+mid+' Z';
+ el('path',{d:outline,fill:'none',stroke:'#30305d','stroke-width':2,'stroke-linejoin':'round'});
+ [[front,mid,front,bottom],[right,mid,right,bottom],[back,mid,back,bottom],[front,mid,right,mid],[front,bottom,right,bottom]].forEach(a=>el('line',{x1:a[0],y1:a[1],x2:a[2],y2:a[3],stroke:'#9878e8','stroke-width':1.6,'stroke-dasharray':'6 4'}));
  const label=(x,y,txt)=>{const e=el('text',{x:x,y:y,'text-anchor':'middle','font-size':10,'font-family':'Arial',fill:'#555078'});e.textContent=txt};
- label(front+ww/2,Math.max(12,top-5),'WIDTH '+w+' cm');label(Math.max(12,left-8),mid+hh/2,'HEIGHT '+h+' cm');
- label(front+ww+dd/2,mid+hh+15,'DEPTH '+d+' cm');
+ label(front+mm(w)/2,Math.max(12,top-4),'WIDTH '+w+' cm');
+ label(left-5,mid+mm(h)/2,'HEIGHT '+h+' cm');
+ label(right+mm(d)/2,bottom+13,'DEPTH '+d+' cm');
  return {totalW,totalH};
 }
 function update(){
@@ -130,13 +127,13 @@ function update(){
 }
 function downloadSVG(){
  const svg=$('netPreview').cloneNode(true);const w=Number($('width').value),h=Number($('height').value),d=Number($('depth').value),tab=Number($('tab').value);
- const mmW=(2*w+2*d+2*($('showTabs').checked?tab:0)+1.2)*10,mmH=(h+2*d+2*($('showTabs').checked?tab:0)+1.2)*10;
+ const mmW=(2*w+2*d+2*($('showTabs').checked?tab:0)+1.2)*10,mmH=(h+2*d+1.2)*10;
  svg.setAttribute('xmlns','http://www.w3.org/2000/svg');svg.setAttribute('width',mmW+'mm');svg.setAttribute('height',mmH+'mm');
  const blob=new Blob([new XMLSerializer().serializeToString(svg)],{type:'image/svg+xml'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='paperforge-3d-template.svg';a.click();URL.revokeObjectURL(url);
 }
 $('update').addEventListener('click',update);['width','height','depth','tab','paper','showTabs'].forEach(id=>$(id).addEventListener('input',update));
 $('reset').addEventListener('click',()=>{$('width').value=10;$('height').value=12;$('depth').value=4;$('tab').value=1;$('paper').value='A4';$('showTabs').checked=true;update()});
-$('download').addEventListener('click',downloadSVG);$('print').addEventListener('click',()=>window.print());
+$('download').addEventListener('click',downloadSVG);$('print').addEventListener('click',()=>{const w=Number($('width').value),h=Number($('height').value),d=Number($('depth').value),t=$('showTabs').checked?Number($('tab').value):0;const svg=$('netPreview');svg.setAttribute('width',((2*w+2*d+2*t+1.2)*10)+'mm');svg.setAttribute('height',((h+2*d+1.2)*10)+'mm');window.print();window.addEventListener('afterprint',()=>{svg.setAttribute('width',svg.viewBox.baseVal.width);svg.setAttribute('height',svg.viewBox.baseVal.height)},{once:true})});
 $('showNet').addEventListener('click',()=>{$('showNet').classList.add('active');$('show3D').classList.remove('active');$('netWrap').style.display='grid';$('scene').style.display='none'});
 $('show3D').addEventListener('click',()=>{$('show3D').classList.add('active');$('showNet').classList.remove('active');$('netWrap').style.display='none';$('scene').style.display='block';if(renderer){renderer.setSize(scene.clientWidth,scene.clientHeight)}});
 init3D();update();
