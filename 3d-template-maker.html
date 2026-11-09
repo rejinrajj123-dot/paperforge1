@@ -109,7 +109,7 @@ function makeNet(w,h,d,tabs){
  (tabs&&tt>0?' L '+(left-tt)+' '+(bottom-tt*.45)+' L '+(left-tt)+' '+(mid+tt*.45):'')+
  ' L '+left+' '+mid+' L '+front+' '+mid+' Z';
  el('path',{d:outline,fill:'none',stroke:'#30305d','stroke-width':2,'stroke-linejoin':'round'});
- [[front,mid,front,bottom],[right,mid,right,bottom],[back,mid,back,bottom],[front,mid,right,mid],[front,bottom,right,bottom]].forEach(a=>el('line',{x1:a[0],y1:a[1],x2:a[2],y2:a[3],stroke:'#9878e8','stroke-width':1.6,'stroke-dasharray':'6 4'}));
+ [[left,mid,left,bottom],[front,mid,front,bottom],[right,mid,right,bottom],[back,mid,back,bottom],[end,mid,end,bottom],[front,mid,right,mid],[front,bottom,right,bottom]].forEach(a=>el('line',{x1:a[0],y1:a[1],x2:a[2],y2:a[3],stroke:'#9878e8','stroke-width':1.6,'stroke-dasharray':'6 4'}));
  const label=(x,y,txt)=>{const e=el('text',{x:x,y:y,'text-anchor':'middle','font-size':10,'font-family':'Arial',fill:'#555078'});e.textContent=txt};
  label(front+mm(w)/2,Math.max(12,top-4),'WIDTH '+w+' cm');
  label(left-5,mid+mm(h)/2,'HEIGHT '+h+' cm');
