@@ -1717,6 +1717,7 @@
     set('validDetail',state.validMessage);
     renderAsymmetric();
   }
+  window.updateGeometry=function(){originalUpdateGeometry();updateCustomStats();};
   const oldGenerate=window.generatePDF;
   window.generatePDF=function(){
     const {jsPDF}=window.jspdf;
