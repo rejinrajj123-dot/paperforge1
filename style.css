@@ -831,3 +831,34 @@ footer>p{color:#d6d8ff}
   background-color:#fff !important;
 }
 .bp-art.rengoku .figure-shape{display:none !important}
+
+
+/* =====================================================
+   BLUEPRINT CARD ALIGNMENT — keep every download button
+   anchored to the same bottom line in each grid row.
+===================================================== */
+.card-grid{
+  align-items:stretch;
+}
+.bp-card{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+.bp-card > .bp-art{
+  flex:0 0 auto;
+}
+.bp-card .card-content{
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  align-items:stretch;
+}
+.bp-card .card-content > p{
+  flex:1 1 auto;
+}
+.bp-card .download{
+  width:100%;
+  margin-top:auto;
+  flex:0 0 auto;
+}
