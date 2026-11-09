@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Template System — PaperForge</title>
+<meta name="description" content="Customize a 3D papercraft character template with your own photo, colours and parts.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js"></script>
+<style>
+:root{--ink:#22234d;--muted:#737391;--purple:#7545ed;--blue:#3f9df5;--cyan:#23b9d4;--pink:#e45ca8;--line:#e4def8;--panel:#fff}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif;background:radial-gradient(circle at 10% 0,#e9e1ff,transparent 34rem),linear-gradient(140deg,#faf8ff,#edf8ff 62%,#effff7)}
+a{color:inherit;text-decoration:none}button,input,select{font:inherit}button{cursor:pointer}
+header{position:sticky;top:0;z-index:5;background:#ffffffdf;backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav{max-width:1320px;margin:auto;padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{font-size:21px;font-weight:900;letter-spacing:-1px}.brand span{color:var(--purple)}nav{display:flex;gap:20px;align-items:center;color:#696687;font-size:13px}nav a.active{color:var(--purple);font-weight:800}
+.wrap{max-width:1320px;margin:auto;padding:30px 22px 65px}.hero{margin:8px 0 24px}.eyebrow{font-size:11px;font-weight:900;letter-spacing:2px;color:#7656cf;margin:0 0 8px}.hero h1{font-size:clamp(34px,5vw,54px);line-height:1.03;letter-spacing:-2px;margin:0}.hero h1 span{background:linear-gradient(100deg,var(--purple),var(--blue),var(--pink));background-clip:text;color:transparent}.hero p:last-child{max-width:760px;color:var(--muted);margin:12px 0 0}
+.grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:18px;align-items:start}.panel{background:#ffffffed;border:1px solid var(--line);border-radius:22px;box-shadow:0 14px 40px #5142a012;overflow:hidden}.controls{padding:18px}.panel h2{font-size:17px;margin:0 0 12px}.step{display:flex;align-items:center;gap:9px;margin:19px 0 10px;font-weight:850}.step b{display:grid;place-items:center;width:25px;height:25px;border-radius:9px;background:#eee8ff;color:#6746cf}.field{margin:12px 0}.field label{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:800;margin-bottom:6px}.field small{color:var(--muted);font-weight:500}.field input[type=file],.field select{width:100%;border:1px solid #ded8f2;border-radius:11px;padding:10px;background:#fff;color:var(--ink)}.field input[type=color]{width:100%;height:38px;border:1px solid var(--line);border-radius:9px;background:#fff;padding:3px}.field input[type=range]{width:100%;accent-color:var(--purple)}.field input[type=text]{width:100%;border:1px solid #ded8f2;border-radius:10px;padding:10px}.color-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tip{background:linear-gradient(120deg,#f0eaff,#e8f7ff);border:1px solid #ddd5ff;border-radius:13px;padding:11px;color:#5f5787;font-size:11px;margin-top:14px}.tip b{color:#4e36a7}.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:850}.primary{background:linear-gradient(105deg,var(--purple),var(--blue));color:#fff;box-shadow:0 9px 20px #7545ed2c}.soft{background:#f1edff;color:#6146c1;border:1px solid #ded5ff}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}.wide{grid-column:1/-1}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:16px}.preview{min-width:0}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 17px;border-bottom:1px solid var(--line)}.panel-head h2{margin:0}.tag{font-size:10px;font-weight:900;letter-spacing:1px;color:#6c53c7;background:#f0ebff;border-radius:999px;padding:6px 9px}
+#scene{height:560px;background:radial-gradient(circle at 50% 35%,#fff,#eef0ff 70%,#e8f7ff);position:relative}#scene canvas{display:block;width:100%;height:100%}.hint{position:absolute;bottom:12px;left:14px;background:#ffffffdc;border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:#777493;font-size:11px;pointer-events:none}
+.photo-preview{padding:13px;background:#faf9ff;border-top:1px solid var(--line)}.photo-preview img{display:block;width:100%;max-height:160px;object-fit:contain;border-radius:12px;background:#f0edff}.photo-preview p{font-size:11px;color:var(--muted);margin:7px 0 0}
+.parts{padding:15px}.part{border:1px solid var(--line);border-radius:13px;padding:11px;margin:9px 0;background:#fff}.part strong{display:block;font-size:12px}.part span{font-size:11px;color:var(--muted)}.part button{margin-top:8px;border:0;border-radius:8px;background:#f0ebff;color:#6547c5;padding:6px 9px;font-size:11px;font-weight:800}
+.status{padding:12px 16px;color:#686487;font-size:11px;background:#fbfaff;border-top:1px solid var(--line)}footer{text-align:center;color:#8985a4;font-size:12px;padding:28px}
+@media(max-width:950px){.grid{grid-template-columns:1fr}.controls{position:static}.stage{grid-template-columns:1fr 210px}#scene{height:500px}}
+@media(max-width:650px){.nav{padding:12px 14px}.nav nav a:not(:first-child){display:none}.wrap{padding:22px 12px 45px}.stage{grid-template-columns:1fr}#scene{height:420px}.parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.parts h2{grid-column:1/-1}.part{margin:0}.color-grid{gap:6px}}
+</style>
+</head>
+<body>
+<header><div class="nav"><a class="brand" href="index.html">Paper<span>Forge</span></a><nav><a href="index.html">Home</a><a href="index.html#blueprints">Blueprints</a><a href="paperforge_frame_lab.html">Frame Lab</a><a class="active" href="template-system.html">Template System</a></nav></div></header>
+<main class="wrap">
+<section class="hero"><p class="eyebrow">PAPERFORGE CREATOR WORKSPACE · TEMPLATE 01</p><h1>Make the character <span>yours.</span></h1><p>Start with one fixed chibi paper-character template. Add a photo as your visual reference, customize the main colours and inspect the model in 3D. Each character template can be designed and improved individually.</p></section>
+<div class="grid">
+<aside class="panel controls">
+<h2>Customize your template</h2>
+<div class="step"><b>1</b> Choose a base template</div>
+<div class="field"><label for="template">Character template</label><select id="template"><option value="chibi">Template 01 — Chibi Hero</option><option value="robot">Template 02 — Mini Robot (coming next)</option><option value="fantasy" disabled>Template 03 — Fantasy Figure (planned)</option></select></div>
+<div class="step"><b>2</b> Add your photo reference</div>
+<div class="field"><label for="photo">Upload a photo <small>JPG / PNG</small></label><input id="photo" type="file" accept="image/png,image/jpeg,image/webp"></div>
+<div class="field"><label for="photoMode">How to use the photo</label><select id="photoMode"><option value="face">Show photo on character face</option><option value="reference">Keep as reference only</option></select></div>
+<div class="step"><b>3</b> Customize the parts</div>
+<div class="color-grid">
+<div class="field"><label for="skin">Skin colour</label><input id="skin" type="color" value="#f2c6a5"></div>
+<div class="field"><label for="hair">Hair colour</label><input id="hair" type="color" value="#633c2d"></div>
+<div class="field"><label for="top">Top / jacket</label><input id="top" type="color" value="#7545ed"></div>
+<div class="field"><label for="bottom">Bottom</label><input id="bottom" type="color" value="#30345f"></div>
+<div class="field"><label for="shoes">Shoes</label><input id="shoes" type="color" value="#f0a44a"></div>
+<div class="field"><label for="eye">Eye colour</label><input id="eye" type="color" value="#3b77bd"></div>
+</div>
+<div class="field"><label for="name">Character name</label><input id="name" type="text" maxlength="24" value="My Paper Hero" placeholder="Name your character"></div>
+<div class="field"><label for="scale">Character size <small id="scaleLabel">100%</small></label><input id="scale" type="range" min="75" max="125" value="100"></div>
+<div class="actions"><button class="btn soft" id="reset">Reset template</button><button class="btn primary" id="apply">Update model</button><button class="btn primary wide" id="export">Export 3D model (.glb)</button></div>
+<div class="tip"><b>How to use:</b> Upload a clear front-facing photo, choose whether to display it on the face or keep it beside the preview, then adjust the colours. Drag the model to rotate and scroll to zoom.</div>
+</aside>
+<section class="stage">
+<div class="panel preview"><div class="panel-head"><h2 id="previewTitle">My Paper Hero</h2><span class="tag">LIVE 3D TEMPLATE</span></div><div id="scene"><div class="hint">Drag to rotate · Scroll to zoom</div></div><div class="status" id="status">Template loaded. Customize the parts on the left.</div></div>
+<aside class="panel parts"><h2>Template parts</h2>
+<div class="part"><strong>01 · Head & face</strong><span>Face shape, eyes and photo surface</span><br><button data-focus="head">Focus head</button></div>
+<div class="part"><strong>02 · Hair</strong><span>Separate editable hair piece</span><br><button data-focus="hair">Focus hair</button></div>
+<div class="part"><strong>03 · Torso</strong><span>Jacket / shirt colour</span><br><button data-focus="torso">Focus torso</button></div>
+<div class="part"><strong>04 · Arms & hands</strong><span>Separate left and right pieces</span><br><button data-focus="arms">Focus arms</button></div>
+<div class="part"><strong>05 · Legs & shoes</strong><span>Bottom and shoe colours</span><br><button data-focus="legs">Focus legs</button></div>
+<div class="tip"><b>Blueprint Engine:</b> The next module will take an exported 3D template and unfold its surfaces into printable cut-and-fold pages. This page is the character-customization stage.</div>
+</aside>
+</section>
+</div>
+</main><footer>PaperForge · Customize, unfold, print and build.</footer>
+<script>
+(() => {
+const $=id=>document.getElementById(id);
+const sceneHost=$('scene'), status=$('status');
+const scene=new THREE.Scene(); scene.background=new THREE.Color('#f0f2ff');
+const camera=new THREE.PerspectiveCamera(35,1,.1,100);camera.position.set(4.3,3.1,6.8);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.outputEncoding=THREE.sRGBEncoding;sceneHost.appendChild(renderer.domElement);
+const controls=new THREE.OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.set(0,1.8,0);
+scene.add(new THREE.HemisphereLight(0xffffff,0x9b9ac4,2));const key=new THREE.DirectionalLight(0xffffff,2.2);key.position.set(4,7,5);key.castShadow=true;scene.add(key);
+const floor=new THREE.Mesh(new THREE.CircleGeometry(4,64),new THREE.MeshBasicMaterial({color:0xe8eaff,transparent:true,opacity:.7}));floor.rotation.x=-Math.PI/2;floor.position.y=-.06;scene.add(floor);
+const model=new THREE.Group();scene.add(model);let photoTexture=null,photoObjectUrl=null;const parts={};
+const mat=(color,rough=.78)=>new THREE.MeshStandardMaterial({color,roughness:rough});
+function add(name,geo,material,pos,scale){const m=new THREE.Mesh(geo,material);m.name=name;m.position.set(...pos);if(scale)m.scale.set(...scale);m.castShadow=true;m.receiveShadow=true;model.add(m);parts[name]=m;return m}
+const sphere=(w,h,d)=>new THREE.SphereGeometry(1,28,20).scale(w,h,d);
+const skin=mat($('skin').value),hair=mat($('hair').value),top=mat($('top').value),bottom=mat($('bottom').value),shoe=mat($('shoes').value),eye=mat($('eye').value),white=mat('#fffdf8'),dark=mat('#342c42');
+add('body',new THREE.BoxGeometry(.92,.95,.48),top,[0,1.65,0],[1,1,1]);
+add('neck',new THREE.CylinderGeometry(.15,.17,.22,20),skin,[0,2.18,0]);
+add('head',sphere(.72,.78,.62),skin,[0,2.92,0]);
+add('haircap',new THREE.SphereGeometry(1,28,20),hair,[0,3.28,-.02],[.76,.58,.68]);
+add('fringe',new THREE.ConeGeometry(.32,.62,5),hair,[-.26,3.05,.48]);parts.fringe.rotation.z=.45;
+add('sidehairL',new THREE.ConeGeometry(.22,.68,5),hair,[-.62,2.9,.12]);parts.sidehairL.rotation.z=-.2;
+add('sidehairR',new THREE.ConeGeometry(.22,.68,5),hair,[.62,2.9,.12]);parts.sidehairR.rotation.z=.2;
+add('eyeWhiteL',sphere(.16,.19,.07),white,[-.27,2.98,.565]);add('eyeWhiteR',sphere(.16,.19,.07),white,[.27,2.98,.565]);
+add('eyeL',sphere(.075,.095,.04),eye,[-.27,2.97,.63]);add('eyeR',sphere(.075,.095,.04),eye,[.27,2.97,.63]);
+add('mouth',new THREE.BoxGeometry(.22,.035,.025),dark,[0,2.69,.61]);
+add('armL',sphere(.19,.52,.2),top,[-.66,1.68,0]);parts.armL.rotation.z=-.25;add('armR',sphere(.19,.52,.2),top,[.66,1.68,0]);parts.armR.rotation.z=.25;
+add('handL',sphere(.17,.16,.17),skin,[-.78,1.19,.03]);add('handR',sphere(.17,.16,.17),skin,[.78,1.19,.03]);
+add('legL',new THREE.CylinderGeometry(.19,.17,.68,18),bottom,[-.25,.86,0]);add('legR',new THREE.CylinderGeometry(.19,.17,.68,18),bottom,[.25,.86,0]);
+add('shoeL',new THREE.BoxGeometry(.38,.2,.52),shoe,[-.25,.43,.1]);add('shoeR',new THREE.BoxGeometry(.38,.2,.52),shoe,[.25,.43,.1]);
+const photoMat=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0});
+const photoPlane=new THREE.Mesh(new THREE.PlaneGeometry(.76,.7),photoMat);photoPlane.position.set(0,2.91,.59);photoPlane.name='photoFace';model.add(photoPlane);parts.photoFace=photoPlane;
+const outline=new THREE.Mesh(new THREE.CylinderGeometry(.82,.82,.08,48),mat('#b7a4ef'));outline.position.y=.04;model.add(outline);
+function resize(){const w=sceneHost.clientWidth,h=sceneHost.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}new ResizeObserver(resize).observe(sceneHost);resize();
+function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)}animate();
+function colorPart(names,value){names.forEach(n=>{if(parts[n])parts[n].material=mat(value)})}
+function update(){
+colorPart(['head','neck','handL','handR'],$('skin').value);colorPart(['haircap','fringe','sidehairL','sidehairR'],$('hair').value);
+colorPart(['body','armL','armR'],$('top').value);colorPart(['legL','legR'],$('bottom').value);colorPart(['shoeL','shoeR'],$('shoes').value);
+colorPart(['eyeL','eyeR'],$('eye').value);model.scale.setScalar(Number($('scale').value)/100);
+$('scaleLabel').textContent=$('scale').value+'%';$('previewTitle').textContent=$('name').value.trim()||'My Paper Hero';
+const usePhoto=$('photoMode').value==='face'&&photoTexture;photoPlane.material.map=usePhoto?photoTexture:null;photoPlane.material.opacity=usePhoto?1:0;photoPlane.material.needsUpdate=true;
+status.textContent=usePhoto?'Photo applied to the face preview. This is a visual texture, not automatic 3D face reconstruction.':'Model updated. Photo can be kept as a reference or applied as a face texture.';
+}
+['skin','hair','top','bottom','shoes','eye','scale','name','photoMode'].forEach(id=>$(id).addEventListener('input',update));
+$('apply').addEventListener('click',()=>{update();status.textContent='Your character changes have been applied.'});
+$('photo').addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;if(photoObjectUrl)URL.revokeObjectURL(photoObjectUrl);photoObjectUrl=URL.createObjectURL(file);const img=new Image();img.onload=()=>{photoTexture=new THREE.Texture(img);photoTexture.encoding=THREE.sRGBEncoding;photoTexture.needsUpdate=true;$('photoPreview')?.remove();const box=document.createElement('div');box.id='photoPreview';box.className='photo-preview';box.innerHTML='<p>Your uploaded photo reference</p>';const im=document.createElement('img');im.src=photoObjectUrl;box.appendChild(im);$('photo').closest('.field').appendChild(box);update()};img.src=photoObjectUrl;});
+$('reset').addEventListener('click',()=>{const defaults={skin:'#f2c6a5',hair:'#633c2d',top:'#7545ed',bottom:'#30345f',shoes:'#f0a44a',eye:'#3b77bd',scale:'100',name:'My Paper Hero',photoMode:'face'};Object.entries(defaults).forEach(([id,v])=>$(id).value=v);update();status.textContent='Template reset to its original colours.'});
+document.querySelectorAll('[data-focus]').forEach(b=>b.addEventListener('click',()=>{const focus=b.dataset.focus;const targets={head:[0,2.9,0],hair:[0,3.2,0],torso:[0,1.65,0],arms:[0,1.65,0],legs:[0,.7,0]};controls.target.set(...targets[focus]);camera.position.set(targets[focus][0]+2.4,targets[focus][1]+1.2,targets[focus][2]+4.4);status.textContent='Focused on '+focus+'. Drag to inspect this part.'}));
+$('export').addEventListener('click',()=>{update();status.textContent='Preparing your 3D model…';const exporter=new THREE.GLTFExporter();exporter.parse(model,result=>{const blob=new Blob([result],{type:'application/octet-stream'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=(($('name').value.trim()||'paperforge-character').replace(/[^a-z0-9-_]+/gi,'-'))+'.glb';a.click();URL.revokeObjectURL(url);status.textContent='3D model exported. The Blueprint Engine will use this model in a later step.'},err=>{console.error(err);status.textContent='Export failed. Please refresh and try again.'},{binary:true});});
+update();
+})();
+</script>
+</body></html>
