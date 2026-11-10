@@ -20,12 +20,12 @@ header{position:sticky;top:0;z-index:5;background:#ffffffdf;backdrop-filter:blur
 .result{display:none}.result.show{display:block}.result img{display:block;max-width:100%;max-height:850px;margin:auto;object-fit:contain;background:#fff}.result-actions{display:flex;gap:8px;flex-wrap:wrap;padding:13px 16px}.smallprint{font-size:11px;color:#7b7895;margin:10px 0 0}
 footer{text-align:center;color:#8985a4;font-size:12px;padding:30px}
 @media(max-width:900px){.layout{grid-template-columns:1fr}.controls{order:1}.work{order:2}}
-@media(max-width:620px){.nav{padding:12px 14px}.nav nav{gap:10px;font-size:11px}.nav nav a:nth-child(2),.nav nav a:nth-child(3){display:none}.wrap{padding:23px 12px 45px}.controls{padding:15px}.sheet{min-height:300px}.panelhead{padding:13px}.hero h1{letter-spacing:-1.5px}}
+@media(max-width:620px){.nav{padding:12px 14px}.nav nav{gap:10px;font-size:11px}.nav nav #soundToggle{padding:7px 9px;font-size:10px}.nav nav a:nth-child(2),.nav nav a:nth-child(3){display:none}.wrap{padding:23px 12px 45px}.controls{padding:15px}.sheet{min-height:300px}.panelhead{padding:13px}.hero h1{letter-spacing:-1.5px}}
 @media print{body{background:#fff!important}.no-print,header,.hero,.controls,.panelhead,.previewfoot,.status,footer{display:none!important}.wrap{padding:0!important;max-width:none}.layout,.work{display:block}.panel{border:0;box-shadow:none}.result{display:block!important}.result img{max-width:100%;max-height:none;width:100%;height:auto}.preview{display:none!important}}
 </style>
 </head>
 <body>
-<header class="no-print"><div class="nav"><a class="brand" href="index.html">Paper<span>Forge</span></a><nav><a href="index.html">Home</a><a href="index.html#blueprints">Blueprints</a><a href="paperforge_frame_lab.html">Frame Lab</a><a class="active" href="template-system.html">Template Studio</a></nav></div></header>
+<header class="no-print"><div class="nav"><a class="brand" href="index.html">Paper<span>Forge</span></a><nav><a href="index.html">Home</a><a href="index.html#blueprints">Blueprints</a><a href="paperforge_frame_lab.html">Frame Lab</a><a class="active" href="template-system.html">Template Studio</a><button id="soundToggle" class="btn soft" type="button" aria-pressed="true" title="Turn sound effects off">🔊 Sounds on</button></nav></div></header>
 <main class="wrap">
 <section class="hero no-print"><p class="eyebrow">PAPERFORGE CREATOR WORKSPACE · TEMPLATE SYSTEM V1</p><h1>Customize a template.<br><span class="gradient">Make it yours.</span></h1><p>Start with the Rengoku papercraft sheet, add a photo reference, describe your changes, and let Gemini create a customized printable-sheet concept. The original layout stays available so you can compare.</p></section>
 <div class="layout">
@@ -57,7 +57,48 @@ footer{text-align:center;color:#8985a4;font-size:12px;padding:30px}
 const $=id=>document.getElementById(id);
 const status=$('status'), sourceState=$('sourceState');
 let baseDataUrl='',baseCanvas=null,photoDataUrl='',photoMime='',resultUrl='';
-const setStatus=(msg,type='')=>{status.textContent=msg;status.className='status '+type};
+let soundEnabled=true,audioContext=null;
+function getAudioContext(){
+ const AudioCtx=window.AudioContext||window.webkitAudioContext;
+ if(!AudioCtx)return null;
+ if(!audioContext)audioContext=new AudioCtx();
+ if(audioContext.state==='suspended')audioContext.resume();
+ return audioContext;
+}
+function tone(frequency,start,duration,wave='sine',volume=0.035){
+ const ctx=getAudioContext();if(!ctx||!soundEnabled)return;
+ const osc=ctx.createOscillator(),gain=ctx.createGain();
+ osc.type=wave;osc.frequency.setValueAtTime(frequency,ctx.currentTime+start);
+ gain.gain.setValueAtTime(0.0001,ctx.currentTime+start);
+ gain.gain.exponentialRampToValueAtTime(volume,ctx.currentTime+start+0.012);
+ gain.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+start+duration);
+ osc.connect(gain);gain.connect(ctx.destination);
+ osc.start(ctx.currentTime+start);osc.stop(ctx.currentTime+start+duration+0.02);
+}
+function playSound(kind='click'){
+ if(!soundEnabled)return;
+ if(kind==='success'){tone(523.25,0,.12,'sine',.045);tone(659.25,.11,.13,'sine',.045);tone(783.99,.23,.2,'sine',.04)}
+ else if(kind==='error'){tone(220,0,.16,'triangle',.04);tone(164.81,.15,.2,'triangle',.035)}
+ else if(kind==='toggle'){tone(740,0,.07,'sine',.025)}
+ else{tone(620,0,.045,'sine',.018)}
+}
+const soundToggle=$('soundToggle');
+soundToggle.addEventListener('click',()=>{
+ soundEnabled=!soundEnabled;
+ soundToggle.textContent=soundEnabled?'🔊 Sounds on':'🔇 Sounds off';
+ soundToggle.setAttribute('aria-pressed',String(soundEnabled));
+ soundToggle.title=soundEnabled?'Turn sound effects off':'Turn sound effects on';
+ if(soundEnabled)playSound('toggle');
+});
+document.addEventListener('click',event=>{
+ const button=event.target.closest('button');
+ if(button&&!button.disabled&&button.id!=='soundToggle')playSound('click');
+},true);
+const setStatus=(msg,type='')=>{
+ status.textContent=msg;status.className='status '+type;
+ if(type==='good')playSound('success');
+ else if(type==='error')playSound('error');
+};
 async function renderBaseDocument(source){
  if(!window.pdfjsLib)throw new Error('PDF renderer did not load. Check your internet connection and refresh.');
  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
